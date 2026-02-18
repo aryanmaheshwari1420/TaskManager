@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Brand colors -->
+    <color name="primary">#6C63FF</color>
+    <color name="primary_dark">#4B44CC</color>
+    <color name="primary_light">#EEF0FF</color>
+    <color name="accent">#FF6584</color>
+
+    <!-- Backgrounds -->
+    <color name="bg_main">#F4F5FB</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_header">#6C63FF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1A1A2E</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_on_primary">#FFFFFF</color>
+
+    <!-- Misc -->
+    <color name="divider">#E5E7EB</color>
+    <color name="shadow">#1A000000</color>
+</resources>
