@@ -1,5 +1,6 @@
 package com.example.taskmanager
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.widget.SearchView
@@ -11,6 +12,8 @@ import com.example.taskmanager.databinding.ActivityMainBinding
 import com.example.taskmanager.ui.activity.AddEditTaskActivity
 import com.example.taskmanager.ui.adapter.TaskAdapter
 import com.example.taskmanager.ui.viewmodel.TaskViewModel
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,9 +23,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val sharedPref = getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+        if (!sharedPref.getBoolean("finished", false)) {
+            startActivity(Intent(this, com.example.taskmanager.ui.activity.OnboardingActivity::class.java))
+            finish()
+            return
+        }
+
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Initialize AdMob
+        MobileAds.initialize(this) {}
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
 
         // Edit → open AddEditTaskActivity with the task; Delete → remove via ViewModel
         adapter = TaskAdapter(
