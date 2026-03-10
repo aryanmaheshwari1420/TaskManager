@@ -1,12 +1,12 @@
-package com.example.taskmanager.ui.activity
+package com.aryanmaheshwari.taskmanager.ui.activity
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.taskmanager.data.local.Task
-import com.example.taskmanager.databinding.ActivityAddEditBinding
-import com.example.taskmanager.ui.viewmodel.TaskViewModel
+import com.aryanmaheshwari.taskmanager.data.local.Task
+import com.aryanmaheshwari.taskmanager.databinding.ActivityAddEditBinding
+import com.aryanmaheshwari.taskmanager.ui.viewmodel.TaskViewModel
 
 // Handles both Add and Edit — if a Task is passed via Intent, we're editing
 class AddEditTaskActivity : AppCompatActivity() {

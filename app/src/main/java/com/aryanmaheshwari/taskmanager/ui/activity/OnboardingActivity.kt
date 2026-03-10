@@ -1,4 +1,4 @@
-package com.example.taskmanager.ui.activity
+package com.aryanmaheshwari.taskmanager.ui.activity
 
 import android.content.Context
 import android.content.Intent
@@ -11,10 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.example.taskmanager.MainActivity
-import com.example.taskmanager.R
-import com.example.taskmanager.databinding.ActivityOnboardingBinding
-import com.example.taskmanager.databinding.ItemOnboardingPageBinding
+import com.aryanmaheshwari.taskmanager.MainActivity
+import com.aryanmaheshwari.taskmanager.R
+import com.aryanmaheshwari.taskmanager.databinding.ActivityOnboardingBinding
+import com.aryanmaheshwari.taskmanager.databinding.ItemOnboardingPageBinding
 
 class OnboardingActivity : AppCompatActivity() {
 

@@ -1,10 +1,10 @@
-package com.example.taskmanager.ui.viewmodel
+package com.aryanmaheshwari.taskmanager.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.example.taskmanager.data.local.Task
-import com.example.taskmanager.data.local.TaskDatabase
-import com.example.taskmanager.data.repository.TaskRepository
+import com.aryanmaheshwari.taskmanager.data.local.Task
+import com.aryanmaheshwari.taskmanager.data.local.TaskDatabase
+import com.aryanmaheshwari.taskmanager.data.repository.TaskRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

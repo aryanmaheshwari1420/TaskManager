@@ -1,4 +1,4 @@
-package com.example.taskmanager.data.local
+package com.aryanmaheshwari.taskmanager.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

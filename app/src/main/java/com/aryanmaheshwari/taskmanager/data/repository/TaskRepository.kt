@@ -1,8 +1,8 @@
-package com.example.taskmanager.data.repository
+package com.aryanmaheshwari.taskmanager.data.repository
 
 import androidx.lifecycle.LiveData
-import com.example.taskmanager.data.local.Task
-import com.example.taskmanager.data.local.TaskDao
+import com.aryanmaheshwari.taskmanager.data.local.Task
+import com.aryanmaheshwari.taskmanager.data.local.TaskDao
 
 // Single source of truth — ViewModel talks to this, not the DAO directly
 class TaskRepository(private val taskDao: TaskDao) {

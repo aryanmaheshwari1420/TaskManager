@@ -1,4 +1,4 @@
-package com.example.taskmanager
+package com.aryanmaheshwari.taskmanager
 
 import android.content.Context
 import android.content.Intent
@@ -8,10 +8,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.taskmanager.databinding.ActivityMainBinding
-import com.example.taskmanager.ui.activity.AddEditTaskActivity
-import com.example.taskmanager.ui.adapter.TaskAdapter
-import com.example.taskmanager.ui.viewmodel.TaskViewModel
+import com.aryanmaheshwari.taskmanager.databinding.ActivityMainBinding
+import com.aryanmaheshwari.taskmanager.ui.activity.AddEditTaskActivity
+import com.aryanmaheshwari.taskmanager.ui.adapter.TaskAdapter
+import com.aryanmaheshwari.taskmanager.ui.viewmodel.TaskViewModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         val sharedPref = getSharedPreferences("onboarding", Context.MODE_PRIVATE)
         if (!sharedPref.getBoolean("finished", false)) {
-            startActivity(Intent(this, com.example.taskmanager.ui.activity.OnboardingActivity::class.java))
+            startActivity(Intent(this, com.aryanmaheshwari.taskmanager.ui.activity.OnboardingActivity::class.java))
             finish()
             return
         }

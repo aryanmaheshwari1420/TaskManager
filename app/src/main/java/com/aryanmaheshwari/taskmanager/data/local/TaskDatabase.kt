@@ -1,4 +1,4 @@
-package com.example.taskmanager.data.local
+package com.aryanmaheshwari.taskmanager.data.local
 
 import android.content.Context
 import androidx.room.Database

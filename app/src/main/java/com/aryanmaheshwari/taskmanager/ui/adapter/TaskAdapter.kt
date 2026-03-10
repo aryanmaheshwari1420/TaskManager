@@ -1,12 +1,12 @@
-package com.example.taskmanager.ui.adapter
+package com.aryanmaheshwari.taskmanager.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.taskmanager.R
-import com.example.taskmanager.data.local.Task
+import com.aryanmaheshwari.taskmanager.R
+import com.aryanmaheshwari.taskmanager.data.local.Task
 
 class TaskAdapter(
     private val onEdit: (Task) -> Unit,   // Tap to edit
