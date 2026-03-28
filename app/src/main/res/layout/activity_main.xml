@@ -50,6 +50,18 @@
             app:queryBackground="@null"
             app:searchIcon="@null" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnUnlockPremium"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Unlock Premium (Watch Ad)"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:icon="@android:drawable/ic_menu_view"
+            app:iconTint="@color/white" />
+
     </LinearLayout>
 
     <!-- Task list fills remaining space -->
