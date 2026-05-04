@@ -12,10 +12,19 @@ android {
         applicationId = "com.aryanmaheshwari.taskmanager"
         minSdk = 24
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 3
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:/Users/Abhay Maheshwari/AndroidStudioProjects/TaskManager/keystore.jks")
+            storePassword = "Helloworld@123"
+            keyAlias = "upload"
+            keyPassword = "Helloworld@123"
+        }
     }
 
     buildTypes {
