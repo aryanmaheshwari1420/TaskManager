@@ -12,6 +12,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aryanmaheshwari.taskmanager.databinding.ActivityMainBinding
 import com.aryanmaheshwari.taskmanager.ui.activity.AddEditTaskActivity
+import com.aryanmaheshwari.taskmanager.ui.activity.AiTaskGeneratorBottomSheet
 import com.aryanmaheshwari.taskmanager.ui.adapter.TaskAdapter
 import com.aryanmaheshwari.taskmanager.ui.viewmodel.TaskViewModel
 import com.aryanmaheshwari.taskmanager.utils.AdManager
@@ -89,6 +90,14 @@ class MainActivity : AppCompatActivity() {
                     // Preload for next time
                     AdManager.loadRewardedAd(this)
                 }
+            )
+        }
+
+        // 5b. AI Task Generator — launches the MD3 BottomSheet
+        binding.btnAiGenerator.setOnClickListener {
+            AiTaskGeneratorBottomSheet().show(
+                supportFragmentManager,
+                AiTaskGeneratorBottomSheet.TAG
             )
         }
 

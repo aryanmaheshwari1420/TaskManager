@@ -13,6 +13,9 @@ interface TaskDao {
     @Insert
     suspend fun insertTask(task: Task)
 
+    @Insert
+    suspend fun insertTaskReturningId(task: Task): Long
+
     @Update
     suspend fun updateTask(task: Task)
 
@@ -26,4 +29,7 @@ interface TaskDao {
     // % wildcards allow partial title match
     @Query("SELECT * FROM task_table WHERE title LIKE :query")
     fun searchTasks(query: String): LiveData<List<Task>>
+
+    @Query("SELECT COUNT(*) FROM task_table WHERE title = :title")
+    suspend fun countByTitle(title: String): Int
 }

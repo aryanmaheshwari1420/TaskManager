@@ -26,6 +26,14 @@ class AddEditTaskActivity : AppCompatActivity() {
             taskId = it.id
             binding.etTitle.setText(it.title)
             binding.etDescription.setText(it.description)
+        } ?: run {
+            // AI Task Generator prefill path — only when no existing Task is passed
+            val prefillTitle = intent.getStringExtra("prefill_title")
+            val prefillDesc  = intent.getStringExtra("prefill_description")
+            if (!prefillTitle.isNullOrBlank()) {
+                binding.etTitle.setText(prefillTitle)
+                binding.etDescription.setText(prefillDesc ?: "")
+            }
         }
 
         binding.btnSave.setOnClickListener {

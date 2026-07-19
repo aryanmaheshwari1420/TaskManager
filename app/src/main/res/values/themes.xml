@@ -29,4 +29,20 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <!-- Header shape appearance -->
+    <style name="ShapeAppearance.Header" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomLeft">32dp</item>
+        <item name="cornerSizeBottomRight">32dp</item>
+    </style>
+
+    <!-- Search view theme to ensure white text in header -->
+    <style name="SearchTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:editTextColor">@color/white</item>
+        <item name="android:textColorHint">#CCFFFFFF</item>
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+
 </resources>
