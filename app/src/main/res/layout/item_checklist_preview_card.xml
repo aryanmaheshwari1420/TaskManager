@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/spacing_2"
+    android:layout_marginBottom="@dimen/spacing_10"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="@dimen/radius_large"
+    app:cardElevation="@dimen/spacing_none"
+    app:strokeColor="?attr/colorOutlineVariant"
+    app:strokeWidth="1dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_16">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="@dimen/spacing_24"
+            android:layout_height="@dimen/spacing_24"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:checked="false"
+            app:buttonTint="@color/color_ai_primary"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent" />
+
+        <TextView
+            android:id="@+id/tvChecklistItemText"
+            style="@style/TextAppearance.App.Body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_16"
+            android:layout_weight="1"
+            android:lineSpacingMultiplier="1.2"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="14sp"
+            tools:text="Book hotel in North Goa near Calangute beach" />
+
+        <ImageView
+            android:layout_width="@dimen/spacing_20"
+            android:layout_height="@dimen/spacing_20"
+            android:alpha="0.2"
+            android:contentDescription="@null"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            app:tint="?attr/colorOnSurfaceVariant" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

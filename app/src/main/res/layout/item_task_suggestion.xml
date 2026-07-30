@@ -1,63 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.App.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="10dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="2dp"
-    app:cardBackgroundColor="@color/bg_card">
+    android:layout_marginHorizontal="@dimen/spacing_16"
+    android:layout_marginVertical="@dimen/spacing_6"
+    app:cardElevation="@dimen/spacing_1"
+    app:strokeWidth="1dp"
+    app:strokeColor="?attr/colorOutlineVariant">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:padding="@dimen/spacing_16">
 
-        <!-- Title + description -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:maxLines="2"
-                android:ellipsize="end"
-                tools:text="AI Generated Task Title" />
-
-            <TextView
-                android:id="@+id/tvDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"
-                android:maxLines="4"
-                android:ellipsize="end"
-                tools:text="AI generated detailed task description explaining what steps should be taken." />
-
-        </LinearLayout>
-
-        <!-- Checkbox to select/deselect suggestion -->
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/cbSelect"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/spacing_32"
+            android:layout_height="@dimen/spacing_32"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            app:buttonTint="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="Select task" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/TextAppearance.App.Title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            app:useMaterialThemeColors="true" />
+            android:layout_marginEnd="@dimen/spacing_12"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintEnd_toStartOf="@id/cbSelect"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="AI Generated Task Title" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tvDescription"
+            style="@style/TextAppearance.App.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_4"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            app:layout_constraintEnd_toEndOf="@id/tvTitle"
+            app:layout_constraintStart_toStartOf="@id/tvTitle"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            tools:text="AI generated detailed task description explaining what steps should be taken." />
 
-</androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

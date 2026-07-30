@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="primary">#9C97FF</color>
+    <color name="primary_dark">#6C63FF</color>
+    <color name="primary_light">#2A2A45</color>
+    <color name="on_primary">#1A1633</color>
+
+    <color name="secondary">#4DD9C4</color>
+    <color name="secondary_light">#123832</color>
+    <color name="on_secondary">#00201B</color>
+
+    <color name="tertiary">#FF8FA3</color>
+    <color name="tertiary_light">#3A1E24</color>
+    <color name="on_tertiary">#3A0012</color>
+
+    <color name="bg_main">#121218</color>
+    <color name="bg_card">#1D1D26</color>
+    <color name="bg_header">#1D1930</color>
+    <color name="surface_variant">#26262F</color>
+
+    <color name="text_primary">#EDEDF5</color>
+    <color name="text_secondary">#A0A3B1</color>
+    <color name="text_on_primary">#1A1633</color>
+    <color name="text_disabled">#5C5F6B</color>
+
+    <color name="success">#7DD394</color>
+    <color name="success_container">#173821</color>
+    <color name="warning">#F2B24D</color>
+    <color name="warning_container">#3A2A0E</color>
+    <color name="error">#FF8A65</color>
+    <color name="error_container">#3A1B10</color>
+    <color name="info">#7FB6F5</color>
+    <color name="info_container">#122A3D</color>
+
+    <color name="divider">#33333F</color>
+    <color name="shadow">#40000000</color>
+    <color name="scrim">#99000000</color>
+
+    <color name="accent">#FF8FA3</color>
+</resources>

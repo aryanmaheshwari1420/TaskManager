@@ -1,16 +1,14 @@
 package com.aryanmaheshwari.taskmanager.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.aryanmaheshwari.taskmanager.R
 import com.aryanmaheshwari.taskmanager.data.local.Task
+import com.aryanmaheshwari.taskmanager.databinding.ItemTaskBinding
 
 class TaskAdapter(
-    private val onEdit: (Task) -> Unit,   // Tap to edit
-    private val onDelete: (Task) -> Unit  // Long press to delete
+    private val onEdit: (Task) -> Unit,
+    private val onDelete: (Task) -> Unit
 ) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     private var taskList = listOf<Task>()
@@ -20,29 +18,27 @@ class TaskAdapter(
         notifyDataSetChanged()
     }
 
-    inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val title: TextView = itemView.findViewById(R.id.tvTitle)
-        val description: TextView = itemView.findViewById(R.id.tvDescription)
-    }
+    fun taskAt(position: Int): Task = taskList[position]
+
+    inner class TaskViewHolder(val binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_task, parent, false)
-        return TaskViewHolder(view)
+        val binding = ItemTaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return TaskViewHolder(binding)
     }
 
     override fun getItemCount() = taskList.size
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = taskList[position]
-        holder.title.text = task.title
-        holder.description.text = task.description
-
+        holder.binding.tvTitle.text = task.title
+        holder.binding.tvDescription.text = task.description
         holder.itemView.setOnClickListener { onEdit(task) }
+    }
 
-        holder.itemView.setOnLongClickListener {
-            onDelete(task)
-            true
-        }
+    // Called by ItemTouchHelper when a swipe completes — routes to the same
+    // onDelete callback that used to fire from long-press.
+    fun deleteAt(position: Int) {
+        onDelete(taskList[position])
     }
 }

@@ -20,7 +20,7 @@
             android:value="ca-app-pub-7573894623963915~5258689081"/>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".TaskManagerApp"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

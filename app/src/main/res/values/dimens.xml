@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spacing scale -->
+    <dimen name="space_2">2dp</dimen>
+    <dimen name="space_4">4dp</dimen>
+    <dimen name="space_8">8dp</dimen>
+    <dimen name="space_10">10dp</dimen>
+    <dimen name="space_12">12dp</dimen>
+    <dimen name="space_16">16dp</dimen>
+    <dimen name="space_20">20dp</dimen>
+    <dimen name="space_24">24dp</dimen>
+    <dimen name="space_32">32dp</dimen>
+    <dimen name="space_40">40dp</dimen>
+    <dimen name="space_48">48dp</dimen>
+    <dimen name="space_64">64dp</dimen>
+
+    <!-- Aliases and additional spacing -->
+    <dimen name="spacing_none">0dp</dimen>
+    <dimen name="spacing_1">1dp</dimen>
+    <dimen name="spacing_2">2dp</dimen>
+    <dimen name="spacing_4">@dimen/space_4</dimen>
+    <dimen name="spacing_8">@dimen/space_8</dimen>
+    <dimen name="spacing_10">@dimen/space_10</dimen>
+    <dimen name="spacing_12">@dimen/space_12</dimen>
+    <dimen name="spacing_16">@dimen/space_16</dimen>
+    <dimen name="spacing_20">@dimen/space_20</dimen>
+    <dimen name="spacing_24">@dimen/space_24</dimen>
+    <dimen name="spacing_32">@dimen/space_32</dimen>
+    <dimen name="spacing_40">@dimen/space_40</dimen>
+    <dimen name="spacing_48">@dimen/space_48</dimen>
+    <dimen name="spacing_100">100dp</dimen>
+
+    <dimen name="spacing_xxs">2dp</dimen>
+    <dimen name="spacing_xs">@dimen/space_4</dimen>
+    <dimen name="spacing_s">@dimen/space_8</dimen>
+    <dimen name="spacing_m">@dimen/space_12</dimen>
+    <dimen name="spacing_l">@dimen/space_16</dimen>
+    <dimen name="spacing_xl">@dimen/space_24</dimen>
+    <dimen name="spacing_2xl">@dimen/space_32</dimen>
+    <dimen name="spacing_3xl">@dimen/space_40</dimen>
+    <dimen name="spacing_4xl">@dimen/space_48</dimen>
+    <dimen name="spacing_6xl">@dimen/space_64</dimen>
+
+    <!-- Corner radius scale -->
+    <dimen name="radius_sm">8dp</dimen>
+    <dimen name="radius_md">12dp</dimen>
+    <dimen name="radius_lg">16dp</dimen>
+    <dimen name="radius_xl">24dp</dimen>
+    <dimen name="radius_pill">100dp</dimen>
+
+    <dimen name="radius_small">@dimen/radius_sm</dimen>
+    <dimen name="radius_medium">@dimen/radius_md</dimen>
+    <dimen name="radius_large">@dimen/radius_lg</dimen>
+    <dimen name="radius_extra_large">@dimen/radius_xl</dimen>
+    <dimen name="radius_round">@dimen/radius_pill</dimen>
+
+    <dimen name="radius_m">@dimen/radius_md</dimen>
+    <dimen name="radius_l">@dimen/radius_lg</dimen>
+
+    <!-- Elevation scale -->
+    <dimen name="elevation_0">0dp</dimen>
+    <dimen name="elevation_1">1dp</dimen>
+    <dimen name="elevation_2">3dp</dimen>
+    <dimen name="elevation_3">6dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+
+    <!-- Heights and Sizes -->
+    <dimen name="touch_target_min">48dp</dimen>
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="button_height_compact">36dp</dimen>
+    <dimen name="input_min_height">56dp</dimen>
+    <dimen name="onboarding_image_size">280dp</dimen>
+    <dimen name="icon_size_sm">20dp</dimen>
+    <dimen name="icon_size_md">24dp</dimen>
+    <dimen name="icon_size_lg">32dp</dimen>
+</resources>

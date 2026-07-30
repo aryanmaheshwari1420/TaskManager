@@ -33,6 +33,8 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: LayoutAiTaskGeneratorBottomSheetBinding? = null
     private val binding get() = _binding!!
+    private var skeletonAnimator: android.animation.ObjectAnimator? = null
+
 
     // Shared with the host Activity so the task list refreshes after Save
     private val viewModel: AiTaskViewModel by activityViewModels()
@@ -58,11 +60,7 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
         observeViewModel()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel.resetState()
-        _binding = null
-    }
+
 
     // -------------------------------------------------------------------------
     // Sheet behaviour
@@ -74,6 +72,54 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
             state = BottomSheetBehavior.STATE_EXPANDED
             skipCollapsed = true
         }
+    }
+
+    private fun startSkeletonPulse() {
+        val views = listOf(
+            binding.skeletonLine1, binding.skeletonLine2,
+            binding.skeletonLine3, binding.skeletonLine4
+        )
+        skeletonAnimator?.cancel()
+        skeletonAnimator = android.animation.ObjectAnimator.ofFloat(
+            views.first(), "alpha", 0.4f, 1f
+        ).apply {
+            duration = 700
+            repeatMode = android.animation.ValueAnimator.REVERSE
+            repeatCount = android.animation.ValueAnimator.INFINITE
+            addUpdateListener { anim ->
+                val alpha = anim.animatedValue as Float
+                views.forEach { it.alpha = alpha }
+            }
+            start()
+        }
+    }
+
+    private fun stopSkeletonPulse() {
+        skeletonAnimator?.cancel()
+        skeletonAnimator = null
+    }
+
+    private fun showInputPanel() {
+        binding.panelInput.visibility   = View.VISIBLE
+        binding.panelLoading.visibility = View.GONE
+        binding.panelPreview.visibility = View.GONE
+        stopSkeletonPulse()
+    }
+
+    private fun showLoadingPanel() {
+        binding.panelInput.visibility   = View.GONE
+        binding.panelLoading.visibility = View.VISIBLE
+        binding.panelPreview.visibility = View.GONE
+        startSkeletonPulse()
+    }
+
+    private fun showPreviewPanel(task: GeneratedTask) {
+        binding.panelInput.visibility   = View.GONE
+        binding.panelLoading.visibility = View.GONE
+        binding.panelPreview.visibility = View.VISIBLE
+        stopSkeletonPulse()
+        populatePreview(task)
+        setupPreviewButtons(task)
     }
 
     // -------------------------------------------------------------------------
@@ -125,30 +171,16 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        stopSkeletonPulse()
+        viewModel.resetState()
+        _binding = null
+    }
+
     // -------------------------------------------------------------------------
     // Panel visibility helpers
     // -------------------------------------------------------------------------
-
-    private fun showInputPanel() {
-        binding.panelInput.visibility   = View.VISIBLE
-        binding.panelLoading.visibility = View.GONE
-        binding.panelPreview.visibility = View.GONE
-    }
-
-    private fun showLoadingPanel() {
-        binding.panelInput.visibility   = View.GONE
-        binding.panelLoading.visibility = View.VISIBLE
-        binding.panelPreview.visibility = View.GONE
-    }
-
-    private fun showPreviewPanel(task: GeneratedTask) {
-        binding.panelInput.visibility   = View.GONE
-        binding.panelLoading.visibility = View.GONE
-        binding.panelPreview.visibility = View.VISIBLE
-
-        populatePreview(task)
-        setupPreviewButtons(task)
-    }
 
     // -------------------------------------------------------------------------
     // Preview population
@@ -251,10 +283,13 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
     // -------------------------------------------------------------------------
 
     /** Returns a (background, foreground) colour pair for each priority level. */
-    private fun priorityColors(priority: String): Pair<Int, Int> = when (priority.uppercase()) {
-        "HIGH"   -> Color.parseColor("#FFEBE6") to Color.parseColor("#D63B00")
-        "MEDIUM" -> Color.parseColor("#FFF7E6") to Color.parseColor("#B36A00")
-        else     -> Color.parseColor("#E6F4EA") to Color.parseColor("#1E7A34") // LOW
+    private fun priorityColors(priority: String): Pair<Int, Int> {
+        val ctx = requireContext()
+        return when (priority.uppercase()) {
+            "HIGH"   -> ctx.getColor(R.color.error_container) to ctx.getColor(R.color.error)
+            "MEDIUM" -> ctx.getColor(R.color.warning_container) to ctx.getColor(R.color.warning)
+            else     -> ctx.getColor(R.color.success_container) to ctx.getColor(R.color.success) // LOW
+        }
     }
 
     companion object {

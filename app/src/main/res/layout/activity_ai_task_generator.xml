@@ -1,230 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/bg_main">
+    android:background="?android:attr/colorBackground"
+    android:fitsSystemWindows="true">
 
-    <!-- Purple top bar -->
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary"
-        android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="48dp"
-        android:paddingBottom="24dp">
+        android:background="@android:color/transparent"
+        app:elevation="@dimen/spacing_none">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="AI Task Generator"
-            android:textColor="@color/text_on_primary"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Turn any goal into a list of tasks"
-            android:textColor="#CCffffff"
-            android:textSize="13sp"
-            android:layout_marginTop="2dp" />
-
-    </LinearLayout>
-
-    <!-- Main Content Area -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <androidx.core.widget.NestedScrollView
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="@drawable/bg_header_rounded"
+                android:paddingHorizontal="@dimen/spacing_24"
+                android:paddingTop="@dimen/spacing_48"
+                android:paddingBottom="@dimen/spacing_32">
 
-                <!-- Prompt Input Card -->
-                <androidx.cardview.widget.CardView
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="@dimen/spacing_40"
+                    android:layout_height="@dimen/spacing_40"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Go back"
+                    android:src="@android:drawable/ic_menu_revert"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorOnPrimary" />
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    style="@style/TextAppearance.App.Headline"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_16"
+                    android:text="AI Task Generator"
+                    android:textColor="?attr/colorOnPrimary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btnBack" />
+
+                <TextView
+                    style="@style/TextAppearance.App.Caption"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_4"
+                    android:text="Turn any goal into a list of tasks"
+                    android:textColor="@color/opacity_85_white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/spacing_100"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Prompt Input Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPrompt"
+                style="@style/Widget.App.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_20"
+                app:cardCornerRadius="@dimen/radius_large"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="20dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="@color/bg_card">
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_20">
 
-                    <LinearLayout
+                    <TextView
+                        style="@style/TextAppearance.App.Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.05"
+                        android:text="What is your goal?"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textAllCaps="true" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.App.TextInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:layout_marginTop="@dimen/spacing_8"
+                        app:hintEnabled="false">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="What is your goal?"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.05" />
-
-                        <EditText
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etPrompt"
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
-                            android:layout_marginTop="6dp"
-                            android:background="@drawable/bg_input"
-                            android:hint="e.g., Plan a 3-day trip to Paris or Prepare for a coding interview"
-                            android:textColorHint="@color/text_secondary"
-                            android:textColor="@color/text_primary"
-                            android:textSize="14sp"
-                            android:padding="12dp"
+                            android:layout_height="wrap_content"
                             android:gravity="top|start"
+                            android:hint="e.g., Plan a 3-day trip to Paris"
                             android:inputType="textMultiLine|textCapSentences"
-                            android:maxLines="3" />
+                            android:minHeight="@dimen/input_min_height" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                        <Button
-                            android:id="@+id/btnGenerate"
-                            android:layout_width="match_parent"
-                            android:layout_height="52dp"
-                            android:layout_marginTop="16dp"
-                            android:background="@drawable/bg_button"
-                            android:text="Generate with Gemini"
-                            android:textColor="@color/white"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.04" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <!-- Loading State View -->
-                <LinearLayout
-                    android:id="@+id/layoutLoading"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="32dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <ProgressBar
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:indeterminateTint="@color/primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGenerate"
+                        style="@style/Widget.App.Button.Primary"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="Generating tasks using AI..."
-                        android:textColor="@color/text_primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="This may take a few seconds"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
+                        android:layout_marginTop="@dimen/spacing_8"
+                        android:text="Generate with AI"
+                        android:backgroundTint="@color/color_ai_primary" />
 
                 </LinearLayout>
 
-                <!-- Error State View -->
-                <LinearLayout
-                    android:id="@+id/layoutError"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="32dp"
-                    android:visibility="gone">
+            </com.google.android.material.card.MaterialCardView>
 
-                    <TextView
-                        android:id="@+id/tvErrorMessage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="An error occurred while generating tasks."
-                        android:textColor="@color/accent"
-                        android:textSize="14sp"
-                        android:gravity="center" />
+            <!-- Loading State -->
+            <include
+                android:id="@+id/layoutLoading"
+                layout="@layout/layout_loading_ai"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/spacing_20"
+                android:layout_marginTop="@dimen/spacing_20"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/cardPrompt" />
 
-                    <Button
-                        android:id="@+id/btnRetry"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Retry"
-                        app:strokeColor="@color/primary"
-                        android:textColor="@color/primary" />
+            <!-- Error State -->
+            <LinearLayout
+                android:id="@+id/layoutError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_32"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/cardPrompt">
 
-                </LinearLayout>
-
-                <!-- Success Results List Header -->
                 <TextView
-                    android:id="@+id/tvSuggestionsHeader"
+                    android:id="@+id/tvErrorMessage"
+                    style="@style/TextAppearance.App.Body"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginBottom="12dp"
-                    android:text="AI Suggestions"
-                    android:textColor="@color/text_primary"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
+                    android:gravity="center"
+                    android:text="An error occurred while generating tasks."
+                    android:textColor="?attr/colorError" />
 
-                <!-- Suggestions List -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvSuggestions"
-                    android:layout_width="match_parent"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRetry"
+                    style="@style/Widget.App.Button.Outlined"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    tools:listitem="@layout/item_task_suggestion" />
+                    android:layout_marginTop="@dimen/spacing_12"
+                    android:text="Retry" />
 
             </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
+            <!-- Suggestions Header -->
+            <TextView
+                android:id="@+id/tvSuggestionsHeader"
+                style="@style/TextAppearance.App.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_24"
+                android:layout_marginTop="@dimen/spacing_12"
+                android:layout_marginBottom="@dimen/spacing_12"
+                android:text="AI Suggestions"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layoutLoading"
+                tools:visibility="visible" />
 
-    </FrameLayout>
+            <!-- Suggestions List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSuggestions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/tvSuggestionsHeader"
+                tools:listitem="@layout/item_task_suggestion"
+                tools:visibility="visible" />
 
-    <!-- Save button float at the bottom (Success State) -->
-    <LinearLayout
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Action Bar -->
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/layoutSaveAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="@color/bg_card"
-        android:elevation="8dp"
+        android:layout_gravity="bottom"
         android:visibility="gone"
+        app:cardCornerRadius="@dimen/spacing_none"
+        app:cardElevation="@dimen/spacing_16"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Header"
+        android:rotation="180"
         tools:visibility="visible">
 
-        <Button
-            android:id="@+id/btnSaveTasks"
+        <!-- Nested layout to undo rotation for content -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="@drawable/bg_button"
-            android:text="Add Selected Tasks (0)"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:rotation="180"
+            android:padding="@dimen/spacing_16">
 
-    </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSaveTasks"
+                style="@style/Widget.App.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Selected Tasks"
+                android:backgroundTint="@color/color_ai_primary" />
 
-</LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

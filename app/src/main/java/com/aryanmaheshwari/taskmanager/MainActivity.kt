@@ -18,6 +18,11 @@ import com.aryanmaheshwari.taskmanager.ui.viewmodel.TaskViewModel
 import com.aryanmaheshwari.taskmanager.utils.AdManager
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
+import androidx.recyclerview.widget.ItemTouchHelper
+import android.graphics.Canvas
+import android.graphics.Color
+import androidx.core.content.ContextCompat
+import android.graphics.drawable.ColorDrawable
 
 /**
  * MainActivity handles the task list and ad integration points.
@@ -60,10 +65,67 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
+        val swipeHandler = object : ItemTouchHelper.SimpleCallback(
+            0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: androidx.recyclerview.widget.RecyclerView,
+                viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+                target: androidx.recyclerview.widget.RecyclerView.ViewHolder
+            ): Boolean = false
+
+            override fun onSwiped(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, direction: Int) {
+                adapter.deleteAt(viewHolder.bindingAdapterPosition)
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: androidx.recyclerview.widget.RecyclerView,
+                viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val itemView = viewHolder.itemView
+                val bgColor = ContextCompat.getColor(this@MainActivity, R.color.error)
+                val icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_delete)
+                val iconMargin = (itemView.height - (icon?.intrinsicHeight ?: 0)) / 2
+                val background = ColorDrawable(bgColor)
+
+                if (dX > 0) {
+                    // Swiping right — background + icon on the left
+                    background.setBounds(itemView.left, itemView.top, itemView.left + dX.toInt(), itemView.bottom)
+                    icon?.setBounds(
+                        itemView.left + iconMargin, itemView.top + iconMargin,
+                        itemView.left + iconMargin + (icon.intrinsicWidth), itemView.bottom - iconMargin
+                    )
+                } else if (dX < 0) {
+                    // Swiping left — background + icon on the right
+                    background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    icon?.setBounds(
+                        itemView.right - iconMargin - (icon.intrinsicWidth), itemView.top + iconMargin,
+                        itemView.right - iconMargin, itemView.bottom - iconMargin
+                    )
+                } else {
+                    background.setBounds(0, 0, 0, 0)
+                }
+
+                background.draw(c)
+                icon?.draw(c)
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+        }
+
+        ItemTouchHelper(swipeHandler).attachToRecyclerView(binding.recyclerView)
+
         // 3. Observers
         viewModel.allTasks.observe(this) { tasks ->
             adapter.setTasks(tasks)
             updatePremiumUI() // Refresh UI based on task count
+            binding.layoutEmptyState.visibility = if (tasks.isEmpty()) View.VISIBLE else View.GONE
+            binding.recyclerView.visibility = if (tasks.isEmpty()) View.GONE else View.VISIBLE
         }
 
         // 4. FAB Click Handler with Task Creation Restriction
@@ -105,7 +167,11 @@ class MainActivity : AppCompatActivity() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?) = false
             override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.search(newText ?: "").observe(this@MainActivity) { adapter.setTasks(it) }
+                viewModel.search(newText ?: "").observe(this@MainActivity) { results ->
+                    adapter.setTasks(results)
+                    binding.layoutEmptyState.visibility = if (results.isEmpty()) View.VISIBLE else View.GONE
+                    binding.recyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
+                }
                 return true
             }
         })

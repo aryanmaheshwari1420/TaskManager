@@ -3,7 +3,9 @@ package com.aryanmaheshwari.taskmanager.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -15,6 +17,7 @@ import com.aryanmaheshwari.taskmanager.MainActivity
 import com.aryanmaheshwari.taskmanager.R
 import com.aryanmaheshwari.taskmanager.databinding.ActivityOnboardingBinding
 import com.aryanmaheshwari.taskmanager.databinding.ItemOnboardingPageBinding
+import kotlin.math.abs
 
 class OnboardingActivity : AppCompatActivity() {
 
@@ -29,6 +32,19 @@ class OnboardingActivity : AppCompatActivity() {
         setupOnboardingItems()
         setupIndicators()
         setCurrentIndicator(0)
+
+        // Add Premium Page Transformer
+        if (!areAnimationsDisabled()) {
+            binding.viewPager.setPageTransformer(OnboardingPageTransformer())
+        }
+        binding.viewPager.setPageTransformer { page, position ->
+            page.apply {
+                alpha = 0.4f + (1 - kotlin.math.abs(position)) * 0.6f
+                val scale = 0.92f + (1 - kotlin.math.abs(position)) * 0.08f
+                scaleX = scale
+                scaleY = scale
+            }
+        }
 
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -79,11 +95,12 @@ class OnboardingActivity : AppCompatActivity() {
 
     private fun setupIndicators() {
         val indicators = arrayOfNulls<ImageView>(adapter.itemCount)
-        val layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+        val marginPx = (4 * resources.displayMetrics.density).toInt() // 4dp, density-correct
+        val layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        layoutParams.setMargins(8, 0, 8, 0)
+        layoutParams.setMargins(marginPx, 0, marginPx, 0)
         for (i in indicators.indices) {
             indicators[i] = ImageView(applicationContext)
             indicators[i]?.apply {
@@ -113,6 +130,11 @@ class OnboardingActivity : AppCompatActivity() {
         finish()
     }
 
+    private fun areAnimationsDisabled(): Boolean {
+        val durationScale = Settings.Global.getFloat(contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)
+        return durationScale == 0f
+    }
+
     data class OnboardingItem(val image: Int, val title: String, val description: String)
 
     inner class OnboardingAdapter(private val items: List<OnboardingItem>) :
@@ -140,6 +162,29 @@ class OnboardingActivity : AppCompatActivity() {
                 binding.ivOnboarding.setImageResource(item.image)
                 binding.tvTitle.text = item.title
                 binding.tvDescription.text = item.description
+                
+                // Subtle entrance animation for page content
+                if (!areAnimationsDisabled()) {
+                    binding.ivOnboarding.alpha = 0f
+                    binding.ivOnboarding.scaleX = 0.8f
+                    binding.ivOnboarding.scaleY = 0.8f
+                    binding.ivOnboarding.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(600).start()
+                }
+            }
+        }
+    }
+
+    /**
+     * Subtle Fade + Scale Page Transformer for ViewPager2
+     */
+    class OnboardingPageTransformer : ViewPager2.PageTransformer {
+        override fun transformPage(page: View, position: Float) {
+            page.apply {
+                val absPos = abs(position)
+                alpha = 1f - absPos
+                scaleY = 0.85f + (1f - absPos) * 0.15f
+                scaleX = 0.85f + (1f - absPos) * 0.15f
+                translationX = -position * width / 2
             }
         }
     }
