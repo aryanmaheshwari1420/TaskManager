@@ -34,6 +34,7 @@
     <color name="error_container">#3A1B10</color>
     <color name="info">#7FB6F5</color>
     <color name="info_container">#122A3D</color>
+    <color name="color_ai_surface">@color/primary_light</color>
 
     <color name="divider">#33333F</color>
     <color name="shadow">#40000000</color>

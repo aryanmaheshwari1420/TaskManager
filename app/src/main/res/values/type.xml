@@ -92,5 +92,7 @@
     <style name="TextAppearance.App.HeadlineMedium" parent="TextAppearance.TM.HeadlineMedium" />
     <style name="TextAppearance.App.BodyLarge" parent="TextAppearance.TM.BodyLarge" />
     <style name="TextAppearance.App.BodyMedium" parent="TextAppearance.TM.BodyMedium" />
+    <!-- Add this alongside the existing TextAppearance.App.* aliases -->
+    <style name="TextAppearance.App.Body" parent="TextAppearance.TM.BodyMedium" />
 
 </resources>

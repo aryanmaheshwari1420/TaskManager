@@ -14,11 +14,12 @@
     <dimen name="space_48">48dp</dimen>
     <dimen name="space_64">64dp</dimen>
 
-    <!-- Aliases and additional spacing -->
+    <!-- Aliases and additional spacing (restored — used by AI generator activity/list layouts) -->
     <dimen name="spacing_none">0dp</dimen>
     <dimen name="spacing_1">1dp</dimen>
     <dimen name="spacing_2">2dp</dimen>
     <dimen name="spacing_4">@dimen/space_4</dimen>
+    <dimen name="spacing_6">6dp</dimen>
     <dimen name="spacing_8">@dimen/space_8</dimen>
     <dimen name="spacing_10">@dimen/space_10</dimen>
     <dimen name="spacing_12">@dimen/space_12</dimen>
@@ -70,6 +71,7 @@
     <dimen name="button_height_compact">36dp</dimen>
     <dimen name="input_min_height">56dp</dimen>
     <dimen name="onboarding_image_size">280dp</dimen>
+    <dimen name="empty_illustration_size">120dp</dimen>
     <dimen name="icon_size_sm">20dp</dimen>
     <dimen name="icon_size_md">24dp</dimen>
     <dimen name="icon_size_lg">32dp</dimen>

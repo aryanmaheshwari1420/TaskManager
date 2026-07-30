@@ -42,6 +42,7 @@
     <color name="error_container">#FFEBE6</color>
     <color name="info">#1565C0</color>
     <color name="info_container">#E3F0FC</color>
+    <color name="color_ai_surface">@color/primary_light</color>
 
     <!-- Aliases and specific colors for styles -->
     <color name="color_success">@color/success</color>
