@@ -183,8 +183,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadAds() {
-        // Set Ad Unit ID programmatically based on build type
-        binding.adView.adUnitId = AdManager.getBannerId()
+        // ID and Size are set in XML via @string/banner_ad_unit_id and app:adSize
         val adRequest = AdRequest.Builder().build()
         binding.adView.loadAd(adRequest)
 

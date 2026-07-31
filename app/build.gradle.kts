@@ -21,8 +21,8 @@ android {
         applicationId = "com.aryanmaheshwari.taskmanager"
         minSdk = 24
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 5
+        versionName = "1.0.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
@@ -31,8 +31,9 @@ android {
 
     signingConfigs {
         create("release") {
-            // Note: Ensure this path is correct for your environment or use a relative path
-            storeFile = file("C:/Users/Abhay Maheshwari/AndroidStudioProjects/TaskManager/keystore.jks")
+            // rootProject.file("keystore.jks") refers to D:/AndroidStudioProjects/TaskManager/keystore.jks
+            // This makes the project portable across different drives and folders.
+            storeFile = rootProject.file("keystore.jks")
             storePassword = "Helloworld@123"
             keyAlias = "upload"
             keyPassword = "Helloworld@123"
@@ -43,8 +44,8 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
-            // Official Google AdMob Test App ID
             manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
+            resValue("string", "banner_ad_unit_id", "ca-app-pub-3940256099942544/6300978111")
         }
         release {
             isMinifyEnabled = true
@@ -54,8 +55,8 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
-            // Your Production App ID
             manifestPlaceholders["admobAppId"] = "ca-app-pub-7573894623963915~5258689081"
+            resValue("string", "banner_ad_unit_id", "ca-app-pub-7573894623963915/8806277771")
         }
     }
 
