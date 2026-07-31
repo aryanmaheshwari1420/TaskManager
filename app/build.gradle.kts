@@ -31,6 +31,7 @@ android {
 
     signingConfigs {
         create("release") {
+            // Note: Ensure this path is correct for your environment or use a relative path
             storeFile = file("C:/Users/Abhay Maheshwari/AndroidStudioProjects/TaskManager/keystore.jks")
             storePassword = "Helloworld@123"
             keyAlias = "upload"
@@ -39,10 +40,11 @@ android {
     }
 
     buildTypes {
-
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
+            // Official Google AdMob Test App ID
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
         }
         release {
             isMinifyEnabled = true
@@ -52,6 +54,8 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
+            // Your Production App ID
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-7573894623963915~5258689081"
         }
     }
 
@@ -71,7 +75,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
                 android:alpha="0.85"
-                android:text="Stay organised, stay productive"
+                android:text="Stay organised, stay productivity"
                 android:textColor="@color/text_on_primary"
                 android:textAppearance="@style/TextAppearance.TM.BodyMedium" />
 
@@ -248,7 +248,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:adSize="BANNER"
-        app:adUnitId="ca-app-pub-7573894623963915/8806277771"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,10 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TaskManager">
 
-        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+        <!-- Using manifest placeholder for AdMob App ID -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-7573894623963915~5258689081"/>
+            android:value="${admobAppId}"/>
 
         <activity
             android:name=".MainActivity"

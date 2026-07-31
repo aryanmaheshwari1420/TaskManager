@@ -20,7 +20,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import androidx.recyclerview.widget.ItemTouchHelper
 import android.graphics.Canvas
-import android.graphics.Color
 import androidx.core.content.ContextCompat
 import android.graphics.drawable.ColorDrawable
 
@@ -94,14 +93,12 @@ class MainActivity : AppCompatActivity() {
                 val background = ColorDrawable(bgColor)
 
                 if (dX > 0) {
-                    // Swiping right — background + icon on the left
                     background.setBounds(itemView.left, itemView.top, itemView.left + dX.toInt(), itemView.bottom)
                     icon?.setBounds(
                         itemView.left + iconMargin, itemView.top + iconMargin,
                         itemView.left + iconMargin + (icon.intrinsicWidth), itemView.bottom - iconMargin
                     )
                 } else if (dX < 0) {
-                    // Swiping left — background + icon on the right
                     background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
                     icon?.setBounds(
                         itemView.right - iconMargin - (icon.intrinsicWidth), itemView.top + iconMargin,
@@ -123,12 +120,12 @@ class MainActivity : AppCompatActivity() {
         // 3. Observers
         viewModel.allTasks.observe(this) { tasks ->
             adapter.setTasks(tasks)
-            updatePremiumUI() // Refresh UI based on task count
+            updatePremiumUI()
             binding.layoutEmptyState.visibility = if (tasks.isEmpty()) View.VISIBLE else View.GONE
             binding.recyclerView.visibility = if (tasks.isEmpty()) View.GONE else View.VISIBLE
         }
 
-        // 4. FAB Click Handler with Task Creation Restriction
+        // 4. FAB Click Handler
         binding.fabAddTask.setOnClickListener {
             if (viewModel.canAddTask()) {
                 startActivity(Intent(this, AddEditTaskActivity::class.java))
@@ -138,7 +135,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 5. Reward Ad Integration for Premium Unlock
+        // 5. Reward Ad Integration
         binding.btnUnlockPremium.setOnClickListener {
             Toast.makeText(this, "Loading ad...", Toast.LENGTH_SHORT).show()
             AdManager.showRewardedAd(
@@ -149,13 +146,11 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Premium features unlocked for today!", Toast.LENGTH_LONG).show()
                 },
                 onAdDismissed = {
-                    // Preload for next time
                     AdManager.loadRewardedAd(this)
                 }
             )
         }
 
-        // 5b. AI Task Generator — launches the MD3 BottomSheet
         binding.btnAiGenerator.setOnClickListener {
             AiTaskGeneratorBottomSheet().show(
                 supportFragmentManager,
@@ -179,10 +174,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Check if an interstitial ad should be shown (triggered after 4 tasks)
         if (viewModel.checkAndResetInterstitialTrigger()) {
             AdManager.showInterstitialAd(this) {
-                // Preload for next time
                 AdManager.loadInterstitialAd(this)
             }
         }
@@ -190,17 +183,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadAds() {
-        // Load Banner Ad (existing integration)
+        // Set Ad Unit ID programmatically based on build type
+        binding.adView.adUnitId = AdManager.getBannerId()
         val adRequest = AdRequest.Builder().build()
         binding.adView.loadAd(adRequest)
 
-        // Preload Interstitial and Rewarded Ads for seamless experience
         AdManager.loadInterstitialAd(this)
         AdManager.loadRewardedAd(this)
     }
 
     private fun updatePremiumUI() {
-        // Toggle "Unlock Premium" button visibility and text
         if (viewModel.isPremium) {
             binding.btnUnlockPremium.visibility = View.GONE
         } else {
