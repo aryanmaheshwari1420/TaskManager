@@ -1,15 +1,18 @@
 package com.aryanmaheshwari.taskmanager.ui.activity
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.aryanmaheshwari.taskmanager.R
 import com.aryanmaheshwari.taskmanager.data.local.ChecklistItem
@@ -17,17 +20,14 @@ import com.aryanmaheshwari.taskmanager.data.local.GeneratedTask
 import com.aryanmaheshwari.taskmanager.databinding.LayoutAiTaskGeneratorBottomSheetBinding
 import com.aryanmaheshwari.taskmanager.ui.viewmodel.AiState
 import com.aryanmaheshwari.taskmanager.ui.viewmodel.AiTaskViewModel
+import com.aryanmaheshwari.taskmanager.ui.viewmodel.RecordingState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /**
- * Material Design 3 BottomSheetDialogFragment that drives the entire AI Task Generator flow:
- *
- *   Input panel  →  (Generate clicked)  →  Loading panel  →  Preview panel
- *
- * Business logic lives exclusively in [AiTaskViewModel].
- * UI observes LiveData and delegates all actions to the ViewModel.
+ * Material Design 3 BottomSheetDialogFragment that drives the entire AI Task Generator flow.
+ * Supports both text input and voice input (speech-to-task).
  */
 class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
 
@@ -35,13 +35,12 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
     private var skeletonAnimator: android.animation.ObjectAnimator? = null
 
-
-    // Shared with the host Activity so the task list refreshes after Save
     private val viewModel: AiTaskViewModel by activityViewModels()
 
-    // -------------------------------------------------------------------------
-    // Lifecycle
-    // -------------------------------------------------------------------------
+    companion object {
+        const val TAG = "AiTaskGeneratorBottomSheet"
+        private const val PERMISSION_REQUEST_CODE = 42
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,13 +59,6 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
         observeViewModel()
     }
 
-
-
-    // -------------------------------------------------------------------------
-    // Sheet behaviour
-    // -------------------------------------------------------------------------
-
-    /** Expand the bottom sheet to 90 % screen height so the preview is fully readable. */
     private fun expandSheet() {
         (dialog as? BottomSheetDialog)?.behavior?.apply {
             state = BottomSheetBehavior.STATE_EXPANDED
@@ -104,6 +96,7 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
         binding.panelLoading.visibility = View.GONE
         binding.panelPreview.visibility = View.GONE
         stopSkeletonPulse()
+        updateRecordingUI(RecordingState.Idle)
     }
 
     private fun showLoadingPanel() {
@@ -121,10 +114,6 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
         populatePreview(task)
         setupPreviewButtons(task)
     }
-
-    // -------------------------------------------------------------------------
-    // Input panel setup
-    // -------------------------------------------------------------------------
 
     private fun setupSuggestionChips() {
         val suggestions = mapOf(
@@ -148,14 +137,55 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
                 binding.etPrompt.error = "Please enter a goal first"
                 return@setOnClickListener
             }
-            // Delegate entirely to ViewModel — no business logic here
             viewModel.generateTask(prompt)
+        }
+
+        binding.btnMicrophone.setOnClickListener {
+            requestMicrophonePermissionAndRecord()
+        }
+
+        binding.btnStopRecording.setOnClickListener {
+            Log.d(TAG, "Tick button clicked - stopping recording")
+            viewModel.stopRecordingAndProcess()
+        }
+
+        binding.btnCancelRecording.setOnClickListener {
+            viewModel.cancelRecording()
         }
     }
 
-    // -------------------------------------------------------------------------
-    // ViewModel observation
-    // -------------------------------------------------------------------------
+    private fun requestMicrophonePermissionAndRecord() {
+        val permission = android.Manifest.permission.RECORD_AUDIO
+        if (ContextCompat.checkSelfPermission(requireContext(), permission)
+            == PackageManager.PERMISSION_GRANTED) {
+            startRecording()
+        } else {
+            requestPermissions(arrayOf(permission), PERMISSION_REQUEST_CODE)
+        }
+    }
+
+    private fun startRecording() {
+        if (viewModel.startRecording()) {
+            Toast.makeText(requireContext(), "Recording started. Speak now.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "Failed to start recording.", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startRecording()
+            } else {
+                Toast.makeText(requireContext(), "Microphone permission denied.", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     private fun observeViewModel() {
         viewModel.aiState.observe(viewLifecycleOwner) { state ->
@@ -164,9 +194,56 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
                 is AiState.Loading -> showLoadingPanel()
                 is AiState.Success -> showPreviewPanel(state.task)
                 is AiState.Error   -> {
+                    Log.e(TAG, "UI received AiState.Error: ${state.message}")
                     showInputPanel()
                     Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
                 }
+            }
+        }
+
+        viewModel.recordingState.observe(viewLifecycleOwner) { state ->
+            updateRecordingUI(state)
+        }
+    }
+
+    private fun updateRecordingUI(state: RecordingState) {
+        when (state) {
+            RecordingState.Idle -> {
+                binding.btnMicrophone.visibility = View.VISIBLE
+                binding.btnMicrophone.isEnabled = true
+                binding.layoutRecordingIndicator.visibility = View.GONE
+                binding.btnStopRecording.visibility = View.GONE
+                binding.btnCancelRecording.visibility = View.GONE
+                binding.etPrompt.isEnabled = true
+                binding.btnGenerate.isEnabled = true
+            }
+            RecordingState.Recording -> {
+                binding.btnMicrophone.visibility = View.GONE
+                binding.layoutRecordingIndicator.visibility = View.VISIBLE
+                binding.tvRecordingStatus.text = "Recording..."
+                binding.btnStopRecording.visibility = View.VISIBLE
+                binding.btnCancelRecording.visibility = View.VISIBLE
+                binding.etPrompt.isEnabled = false
+                binding.btnGenerate.isEnabled = false
+            }
+            RecordingState.Processing -> {
+                binding.layoutRecordingIndicator.visibility = View.VISIBLE
+                binding.tvRecordingStatus.text = "Processing audio..."
+                binding.btnStopRecording.visibility = View.GONE
+                binding.btnCancelRecording.visibility = View.GONE
+                binding.etPrompt.isEnabled = false
+                binding.btnGenerate.isEnabled = false
+            }
+            is RecordingState.Error -> {
+                Log.e(TAG, "UI received RecordingState.Error: ${state.message}")
+                binding.layoutRecordingIndicator.visibility = View.GONE
+                binding.btnMicrophone.visibility = View.VISIBLE
+                binding.btnMicrophone.isEnabled = true
+                binding.btnStopRecording.visibility = View.GONE
+                binding.btnCancelRecording.visibility = View.GONE
+                binding.etPrompt.isEnabled = true
+                binding.btnGenerate.isEnabled = true
+                Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -174,24 +251,13 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         stopSkeletonPulse()
-        viewModel.resetState()
         _binding = null
     }
 
-    // -------------------------------------------------------------------------
-    // Panel visibility helpers
-    // -------------------------------------------------------------------------
-
-    // -------------------------------------------------------------------------
-    // Preview population
-    // -------------------------------------------------------------------------
-
     private fun populatePreview(task: GeneratedTask) {
-        // Title and description
         binding.tvPreviewTitle.text       = task.title
         binding.tvPreviewDescription.text = task.description
 
-        // Priority chip — colour-coded for quick visual scanning
         binding.chipPriority.apply {
             text = task.priority.replaceFirstChar { it.uppercase() }
             val (bg, fg) = priorityColors(task.priority)
@@ -199,24 +265,18 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
             setTextColor(fg)
         }
 
-        // Category chip — hidden when null
         if (task.category != null) {
             binding.chipCategory.apply {
                 visibility = View.VISIBLE
                 text = task.category.name
-                chipBackgroundColor = ColorStateList.valueOf(
-                    requireContext().getColor(R.color.primary_light)
-                )
+                chipBackgroundColor = ColorStateList.valueOf(requireContext().getColor(R.color.primary_light))
                 setTextColor(requireContext().getColor(R.color.primary))
             }
         } else {
             binding.chipCategory.visibility = View.GONE
         }
 
-        // Due date
         binding.tvDueDate.text = if (task.dueDate.isNotBlank()) task.dueDate else "No due date"
-
-        // Checklist — inflate items programmatically
         buildChecklist(task.checklist)
     }
 
@@ -224,35 +284,20 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
         binding.layoutChecklist.removeAllViews()
         val inflater = LayoutInflater.from(requireContext())
         items.forEach { item ->
-            val row = inflater.inflate(
-                R.layout.item_checklist_preview,
-                binding.layoutChecklist,
-                false
-            ) as CheckBox
+            val row = inflater.inflate(R.layout.item_checklist_preview, binding.layoutChecklist, false) as CheckBox
             row.text         = item.text
             row.isChecked    = item.isChecked
-            // Check-state changes are UI-only (item is a data class var)
             row.setOnCheckedChangeListener { _, checked -> item.isChecked = checked }
-            // Small margin between items
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { bottomMargin = 2 }
+            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = 2 }
             binding.layoutChecklist.addView(row, params)
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Preview button wiring
-    // -------------------------------------------------------------------------
-
     private fun setupPreviewButtons(task: GeneratedTask) {
-        // Cancel — go back to input panel so user can regenerate
         binding.btnPreviewCancel.setOnClickListener {
             viewModel.resetState()
         }
 
-        // Edit — open AddEditTaskActivity prefilled, then close the sheet
         binding.btnEdit.setOnClickListener {
             val formattedDesc = viewModel.buildFormattedDescription(task)
             val intent = Intent(requireContext(), AddEditTaskActivity::class.java).apply {
@@ -263,7 +308,6 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
             dismiss()
         }
 
-        // Save — delegate entirely to ViewModel, then close the sheet
         binding.btnSave.setOnClickListener {
             binding.btnSave.isEnabled = false
             viewModel.saveGeneratedTask(task) { success, message ->
@@ -278,21 +322,12 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Priority colour mapping
-    // -------------------------------------------------------------------------
-
-    /** Returns a (background, foreground) colour pair for each priority level. */
     private fun priorityColors(priority: String): Pair<Int, Int> {
         val ctx = requireContext()
         return when (priority.uppercase()) {
             "HIGH"   -> ctx.getColor(R.color.error_container) to ctx.getColor(R.color.error)
             "MEDIUM" -> ctx.getColor(R.color.warning_container) to ctx.getColor(R.color.warning)
-            else     -> ctx.getColor(R.color.success_container) to ctx.getColor(R.color.success) // LOW
+            else     -> ctx.getColor(R.color.info_container) to ctx.getColor(R.color.info)
         }
-    }
-
-    companion object {
-        const val TAG = "AiTaskGeneratorBottomSheet"
     }
 }

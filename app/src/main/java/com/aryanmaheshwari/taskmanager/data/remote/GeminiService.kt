@@ -11,11 +11,15 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.getValue
 
 /**
  * Service layer that communicates with Google's Gemini REST API via Retrofit + OkHttp.
+ * Supports both text and audio input.
  * Returns strongly-typed Kotlin models — no raw JSON leaks to upper layers.
  */
 class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
@@ -28,9 +32,9 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
         private const val WRITE_TIMEOUT_SECS = 30L
     }
 
-    // ---------- Prompt -------------------------------------------------------
+    // ---------- Prompts -------------------------------------------------------
 
-    private val systemInstruction = """
+    private val systemInstructionText = """
         The AI should always return ONLY valid JSON.
 
         Expected format:
@@ -59,12 +63,58 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
         CRITICAL: Respond ONLY with the raw JSON object. Do not include introductory text, explanations, or markdown code blocks like ```json.
     """.trimIndent()
 
+    private fun buildAudioSystemPrompt(): String {
+        val now = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val tzFormat = SimpleDateFormat("z", Locale.getDefault())
+
+        val currentDate = dateFormat.format(now.time)
+        val currentTime = timeFormat.format(now.time)
+        val timezone = TimeZone.getDefault().id
+
+        return """
+        You are a task extraction assistant for spoken input (Hindi/English mixed speech).
+        
+        Convert the user's spoken request into structured task/checklist information.
+        
+        Current date: $currentDate
+        Current time: $currentTime
+        Timezone: $timezone
+        
+        Extract ONLY information actually present in the speech.
+        Do NOT invent missing information.
+        
+        Expected format:
+        {
+          "title": "Task title (required)",
+          "description": "Optional description",
+          "priority": "HIGH/MEDIUM/LOW or null",
+          "category": "Inferred category or null",
+          "dueDate": "Relative or absolute date or null",
+          "checklist": ["Item 1", "Item 2", ...] or []
+        }
+        
+        Rules:
+        1. Understand Hindi/English mixed speech.
+        2. Understand relative dates: "kal" (tomorrow), "aaj" (today), "next Monday".
+        3. Understand relative times: "shaam" (evening), "subah" (morning).
+        4. If user mentions multiple items, add them as checklist items.
+        5. Return ONLY valid JSON.
+        6. Never return markdown or code blocks.
+        7. Never explain.
+        8. If title is missing, return null or empty string.
+        
+        CRITICAL: Respond ONLY with the raw JSON object.
+    """.trimIndent()
+    }
+
     // ---------- Retrofit / OkHttp --------------------------------------------
 
     private val okHttpClient: OkHttpClient by lazy {
         val logging = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
-                    else HttpLoggingInterceptor.Level.NONE
+            else HttpLoggingInterceptor.Level.NONE
         }
         OkHttpClient.Builder()
             .connectTimeout(CONNECT_TIMEOUT_SECS, TimeUnit.SECONDS)
@@ -86,7 +136,7 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
     // ---------- Public API ---------------------------------------------------
 
     /**
-     * Generates a fully structured [GeneratedTask] from a user prompt.
+     * Generates a fully structured [GeneratedTask] from a user text prompt.
      * Throws descriptive exceptions on network or parsing failures.
      */
     suspend fun generateTask(prompt: String): GeneratedTask {
@@ -94,11 +144,70 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
             "Gemini API key is not configured. Add gemini.api.key to local.properties."
         }
 
-        val fullPrompt = "$systemInstruction\n\nUser goal: $prompt"
+        val fullPrompt = "$systemInstructionText\n\nUser goal: $prompt"
 
         val request = GeminiRequest(
             contents = listOf(
                 Content(parts = listOf(Part(text = fullPrompt)))
+            ),
+            generationConfig = GenerationConfig(responseMimeType = "application/json")
+        )
+
+        val response = apiService.generateContent(apiKey, request)
+
+        val rawText = response.candidates
+            ?.firstOrNull()
+            ?.content
+            ?.parts
+            ?.firstOrNull()
+            ?.text
+            ?: throw IllegalStateException("Gemini returned an empty response. Please try again.")
+
+        return parseGeneratedTask(rawText)
+    }
+
+    /**
+     * Generates a [GeneratedTask] from an audio file via speech processing.
+     *
+     * @param audioFile The audio file to process (MP3, WAV, etc.)
+     * @throws IllegalArgumentException if API key is not configured
+     * @throws IllegalStateException if Gemini returns empty response
+     * @throws JSONException if response JSON is malformed
+     */
+    suspend fun generateTaskFromAudio(audioFile: File): GeneratedTask {
+        require(apiKey.isNotBlank()) {
+            "Gemini API key is not configured. Add gemini.api.key to local.properties."
+        }
+        require(audioFile.exists()) {
+            "Audio file does not exist: ${audioFile.absolutePath}"
+        }
+
+        // Determine MIME type based on file extension
+        val mimeType = when (audioFile.extension.lowercase()) {
+            "mp3" -> "audio/mp3"
+            "wav" -> "audio/wav"
+            "aac" -> "audio/aac"
+            "flac" -> "audio/flac"
+            "ogg" -> "audio/ogg"
+            else -> "audio/mp3" // Default to MP3
+        }
+
+        // Convert audio file to base64
+        val base64Audio = audioFile.readBytes().let {
+            android.util.Base64.encodeToString(it, android.util.Base64.NO_WRAP)
+        }
+
+        val audioSystemPrompt = buildAudioSystemPrompt()
+
+        val request = GeminiRequest(
+            contents = listOf(
+                Content(parts = listOf(
+                    Part(text = audioSystemPrompt),
+                    Part(inlineData = InlineData(
+                        mimeType = mimeType,
+                        data = base64Audio
+                    ))
+                ))
             ),
             generationConfig = GenerationConfig(responseMimeType = "application/json")
         )

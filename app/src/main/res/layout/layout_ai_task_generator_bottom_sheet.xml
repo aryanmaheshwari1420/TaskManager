@@ -189,6 +189,113 @@
 
             </LinearLayout>
 
+            <!-- Divider for voice section -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/space_20"
+                android:layout_marginBottom="@dimen/space_12"
+                android:background="@color/divider" />
+
+            <!-- Voice input section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Or speak your goal"
+                android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/space_12">
+
+                <!-- Microphone button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMicrophone"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:iconGravity="textStart"
+                    app:icon="@android:drawable/ic_btn_speak_now"
+                    android:contentDescription="Record voice input"
+                    app:backgroundTint="@color/primary"
+                    app:cornerRadius="28dp" />
+
+                <!-- Recording indicator (hidden by default) -->
+                <LinearLayout
+                    android:id="@+id/layoutRecordingIndicator"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:visibility="gone"
+                    android:layout_marginStart="@dimen/space_12">
+
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:background="@color/error"
+                        android:layout_marginEnd="@dimen/space_12"
+                        android:alpha="0.8" />
+
+                    <TextView
+                        android:id="@+id/tvRecordingStatus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Recording..."
+                        android:textAppearance="@style/TextAppearance.TM.BodyLarge"
+                        android:textColor="@color/error" />
+
+                </LinearLayout>
+
+                <!-- Stop recording button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnStopRecording"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="✓"
+                    android:textSize="24sp"
+                    android:visibility="gone"
+                    android:layout_marginStart="@dimen/space_8"
+                    app:backgroundTint="@color/success"
+                    app:cornerRadius="28dp" />
+
+                <!-- Cancel recording button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCancelRecording"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="✕"
+                    android:textSize="24sp"
+                    android:textColor="@color/error"
+                    android:visibility="gone"
+                    android:layout_marginStart="@dimen/space_4" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <!-- PANEL 2 — LOADING (skeleton pulse) -->
