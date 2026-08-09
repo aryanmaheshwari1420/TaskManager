@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import android.graphics.Canvas
 import androidx.core.content.ContextCompat
 import android.graphics.drawable.ColorDrawable
+import com.google.android.gms.ads.RequestConfiguration
 
 /**
  * MainActivity handles the task list and ad integration points.
@@ -48,8 +49,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // 1. Initialize AdMob and Load Ads
-        MobileAds.initialize(this) {}
-        loadAds()
+        val requestConfiguration = RequestConfiguration.Builder()
+            .setTagForChildDirectedTreatment(
+                RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_UNSPECIFIED
+            )
+            .setTagForUnderAgeOfConsent(
+                RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE
+            )
+            .setMaxAdContentRating(
+                RequestConfiguration.MAX_AD_CONTENT_RATING_T
+            )
+            .build()
+
+        MobileAds.setRequestConfiguration(requestConfiguration)
+
+        MobileAds.initialize(this){
+            loadAds()
+        }
 
         // 2. Setup Task Adapter
         adapter = TaskAdapter(

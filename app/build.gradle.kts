@@ -21,8 +21,8 @@ android {
         applicationId = "com.aryanmaheshwari.taskmanager"
         minSdk = 24
         targetSdk = 35
-        versionCode = 5
-        versionName = "1.0.4"
+        versionCode = 7
+        versionName = "1.0.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
@@ -57,6 +57,16 @@ android {
             signingConfig = signingConfigs.getByName("release")
             manifestPlaceholders["admobAppId"] = "ca-app-pub-7573894623963915~5258689081"
             resValue("string", "banner_ad_unit_id", "ca-app-pub-7573894623963915/8806277771")
+        }
+        create("releaseDebug") {
+            initWith(getByName("release"))
+            isDebuggable = true
+            applicationIdSuffix = ".releasedebug"
+            versionNameSuffix = "-rd"
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
+            resValue("string", "banner_ad_unit_id", "ca-app-pub-3940256099942544/6300978111")
+            signingConfig = signingConfigs.getByName("release")
+            matchingFallbacks += listOf("release")
         }
     }
 
