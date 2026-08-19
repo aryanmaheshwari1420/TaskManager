@@ -2,24 +2,21 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Widget.App.Card"
+    style="@style/Widget.App.Card.Task"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/spacing_16"
-    android:layout_marginVertical="@dimen/spacing_6"
-    app:cardElevation="@dimen/spacing_1"
-    app:strokeWidth="1dp"
-    app:strokeColor="?attr/colorOutlineVariant">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="6dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_16">
+        android:padding="16dp">
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/cbSelect"
-            android:layout_width="@dimen/spacing_32"
-            android:layout_height="@dimen/spacing_32"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
             app:buttonTint="?attr/colorPrimary"
@@ -29,13 +26,13 @@
 
         <TextView
             android:id="@+id/tvTitle"
-            style="@style/TextAppearance.App.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/spacing_12"
+            android:layout_marginEnd="12dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="?attr/colorOnSurface"
+            android:textColor="@color/text_primary"
+            android:textAppearance="@style/TextAppearance.TM.TitleMedium"
             app:layout_constraintEnd_toStartOf="@id/cbSelect"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -43,13 +40,14 @@
 
         <TextView
             android:id="@+id/tvDescription"
-            style="@style/TextAppearance.App.Caption"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_4"
+            android:layout_marginTop="6dp"
             android:ellipsize="end"
             android:maxLines="3"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textColor="@color/text_secondary"
+            android:textAppearance="@style/TextAppearance.TM.BodyMedium"
+            android:lineSpacingMultiplier="1.2"
             app:layout_constraintEnd_toEndOf="@id/tvTitle"
             app:layout_constraintStart_toStartOf="@id/tvTitle"
             app:layout_constraintTop_toBottomOf="@id/tvTitle"

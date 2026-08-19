@@ -3,12 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main">
+    android:background="@drawable/bg_nebula_gradient"
+    android:fitsSystemWindows="true">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:clipChildren="false"
         app:layout_constraintBottom_toTopOf="@+id/layoutBottomCard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -16,18 +19,21 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/layoutBottomCard"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/bg_card"
-        app:cardElevation="@dimen/elevation_2"
-        app:shapeAppearanceOverlay="@style/ShapeAppearance.TM.Large"
+        android:layout_margin="@dimen/space_16"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardElevation="@dimen/elevation_3"
         app:strokeWidth="0dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:id="@+id/layoutBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_glass_panel"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="@dimen/space_20"
@@ -40,6 +46,7 @@
                 android:layout_height="wrap_content"
                 android:text="Skip"
                 android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.TM.LabelLarge"
                 android:textColor="@color/text_secondary" />
 
             <LinearLayout
@@ -52,13 +59,12 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnNext"
+                style="@style/Widget.App.Button.Gradient"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/touch_target_min"
+                android:layout_height="wrap_content"
                 android:text="Next"
                 android:textAllCaps="false"
-                android:textColor="@color/on_primary"
-                app:backgroundTint="@color/primary"
-                app:cornerRadius="@dimen/radius_md" />
+                android:textColor="@color/on_primary" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

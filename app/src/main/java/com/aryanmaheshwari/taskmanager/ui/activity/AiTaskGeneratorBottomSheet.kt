@@ -67,49 +67,48 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun startSkeletonPulse() {
-        val views = listOf(
-            binding.skeletonLine1, binding.skeletonLine2,
-            binding.skeletonLine3, binding.skeletonLine4
-        )
-        skeletonAnimator?.cancel()
-        skeletonAnimator = android.animation.ObjectAnimator.ofFloat(
-            views.first(), "alpha", 0.4f, 1f
-        ).apply {
-            duration = 700
-            repeatMode = android.animation.ValueAnimator.REVERSE
-            repeatCount = android.animation.ValueAnimator.INFINITE
-            addUpdateListener { anim ->
-                val alpha = anim.animatedValue as Float
-                views.forEach { it.alpha = alpha }
-            }
-            start()
-        }
+        // Obsolete: pulse skeleton lines replaced by dynamic progress views
     }
 
     private fun stopSkeletonPulse() {
-        skeletonAnimator?.cancel()
-        skeletonAnimator = null
+        // Obsolete
+    }
+
+    private fun animatePanelTransition(showView: View, hideViews: List<View>) {
+        showView.alpha = 0f
+        showView.visibility = View.VISIBLE
+        showView.animate().alpha(1f).setDuration(300).start()
+        
+        hideViews.forEach { view ->
+            if (view.visibility == View.VISIBLE) {
+                view.animate().alpha(0f).setDuration(200).withEndAction {
+                    view.visibility = View.GONE
+                    view.alpha = 1f
+                }.start()
+            } else {
+                view.visibility = View.GONE
+            }
+        }
     }
 
     private fun showInputPanel() {
-        binding.panelInput.visibility   = View.VISIBLE
-        binding.panelLoading.visibility = View.GONE
-        binding.panelPreview.visibility = View.GONE
+        animatePanelTransition(binding.panelInput, listOf(binding.panelLoading, binding.panelPreview))
         stopSkeletonPulse()
         updateRecordingUI(RecordingState.Idle)
     }
 
     private fun showLoadingPanel() {
-        binding.panelInput.visibility   = View.GONE
-        binding.panelLoading.visibility = View.VISIBLE
-        binding.panelPreview.visibility = View.GONE
-        startSkeletonPulse()
+        animatePanelTransition(binding.panelLoading, listOf(binding.panelInput, binding.panelPreview))
+        val prompt = binding.etPrompt.text?.toString().orEmpty().trim()
+        if (prompt.isNotBlank()) {
+            binding.tvLoadingPrompt.text = "Planning \"$prompt\"..."
+        } else {
+            binding.tvLoadingPrompt.text = "Planning your task flow..."
+        }
     }
 
     private fun showPreviewPanel(task: GeneratedTask) {
-        binding.panelInput.visibility   = View.GONE
-        binding.panelLoading.visibility = View.GONE
-        binding.panelPreview.visibility = View.VISIBLE
+        animatePanelTransition(binding.panelPreview, listOf(binding.panelInput, binding.panelLoading))
         stopSkeletonPulse()
         populatePreview(task)
         setupPreviewButtons(task)
@@ -206,9 +205,34 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
+    private var recordingAnimator: android.view.ViewPropertyAnimator? = null
+
+    private fun startRecordingPulse() {
+        binding.layoutRecordingIndicator.alpha = 1f
+        fun pulse() {
+            if (viewModel.recordingState.value == RecordingState.Recording) {
+                recordingAnimator = binding.layoutRecordingIndicator.animate()
+                    .alpha(if (binding.layoutRecordingIndicator.alpha > 0.6f) 0.3f else 1f)
+                    .setDuration(600)
+                    .withEndAction { pulse() }
+                recordingAnimator?.start()
+            } else {
+                binding.layoutRecordingIndicator.alpha = 1f
+            }
+        }
+        pulse()
+    }
+
+    private fun stopRecordingPulse() {
+        recordingAnimator?.cancel()
+        recordingAnimator = null
+        binding.layoutRecordingIndicator.alpha = 1f
+    }
+
     private fun updateRecordingUI(state: RecordingState) {
         when (state) {
             RecordingState.Idle -> {
+                stopRecordingPulse()
                 binding.btnMicrophone.visibility = View.VISIBLE
                 binding.btnMicrophone.isEnabled = true
                 binding.layoutRecordingIndicator.visibility = View.GONE
@@ -225,8 +249,10 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
                 binding.btnCancelRecording.visibility = View.VISIBLE
                 binding.etPrompt.isEnabled = false
                 binding.btnGenerate.isEnabled = false
+                startRecordingPulse()
             }
             RecordingState.Processing -> {
+                stopRecordingPulse()
                 binding.layoutRecordingIndicator.visibility = View.VISIBLE
                 binding.tvRecordingStatus.text = "Processing audio..."
                 binding.btnStopRecording.visibility = View.GONE
@@ -235,6 +261,7 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
                 binding.btnGenerate.isEnabled = false
             }
             is RecordingState.Error -> {
+                stopRecordingPulse()
                 Log.e(TAG, "UI received RecordingState.Error: ${state.message}")
                 binding.layoutRecordingIndicator.visibility = View.GONE
                 binding.btnMicrophone.visibility = View.VISIBLE

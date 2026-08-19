@@ -3,42 +3,55 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="primary">#9C97FF</color>
-    <color name="primary_dark">#6C63FF</color>
-    <color name="primary_light">#2A2A45</color>
-    <color name="on_primary">#1A1633</color>
+    <color name="primary">#2DD4BF</color> <!-- Glowing Teal -->
+    <color name="primary_dark">#14B8A6</color>
+    <color name="primary_light">#132B27</color>
+    <color name="on_primary">#0B0E14</color>
 
-    <color name="secondary">#4DD9C4</color>
-    <color name="secondary_light">#123832</color>
-    <color name="on_secondary">#00201B</color>
+    <color name="secondary">#F4A261</color> <!-- Glowing Peach -->
+    <color name="secondary_light">#352015</color>
+    <color name="on_secondary">#0B0E14</color>
 
-    <color name="tertiary">#FF8FA3</color>
-    <color name="tertiary_light">#3A1E24</color>
+    <color name="tertiary">#FF5E7E</color>
+    <color name="tertiary_light">#3A1A24</color>
     <color name="on_tertiary">#3A0012</color>
 
-    <color name="bg_main">#121218</color>
-    <color name="bg_card">#1D1D26</color>
-    <color name="bg_header">#1D1930</color>
-    <color name="surface_variant">#26262F</color>
+    <!-- AI Colors -->
+    <color name="color_ai_primary">#2DD4BF</color>
+    <color name="color_ai_surface">#132B27</color>
 
-    <color name="text_primary">#EDEDF5</color>
-    <color name="text_secondary">#A0A3B1</color>
-    <color name="text_on_primary">#1A1633</color>
-    <color name="text_disabled">#5C5F6B</color>
+    <!-- Surfaces / backgrounds -->
+    <color name="bg_main">#0B0E14</color>
+    <color name="bg_card">#141922</color>
+    <color name="bg_header">#10151E</color>
+    <color name="surface_variant">#1A202C</color>
 
-    <color name="success">#7DD394</color>
-    <color name="success_container">#173821</color>
-    <color name="warning">#F2B24D</color>
-    <color name="warning_container">#3A2A0E</color>
-    <color name="error">#FF8A65</color>
-    <color name="error_container">#3A1B10</color>
-    <color name="info">#7FB6F5</color>
-    <color name="info_container">#122A3D</color>
-    <color name="color_ai_surface">@color/primary_light</color>
+    <!-- Text -->
+    <color name="text_primary">#E2E8F0</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="text_on_primary">#0B0E14</color>
+    <color name="text_disabled">#475569</color>
 
-    <color name="divider">#33333F</color>
-    <color name="shadow">#40000000</color>
-    <color name="scrim">#99000000</color>
+    <!-- Status -->
+    <color name="success">#34D399</color>
+    <color name="success_container">#064E3B</color>
+    <color name="warning">#FBBF24</color>
+    <color name="warning_container">#78350F</color>
+    <color name="error">#F87171</color>
+    <color name="error_container">#7F1D1D</color>
+    <color name="info">#A78BFA</color>
+    <color name="info_container">#4C1D95</color>
 
-    <color name="accent">#FF8FA3</color>
+    <!-- Aliases and Gradients -->
+    <color name="color_success">@color/success</color>
+    <color name="premium_gold">#F4A261</color>
+    <color name="gradient_start">#E76F51</color> <!-- Glowing Bronze -->
+    <color name="gradient_end">#2DD4BF</color>   <!-- Glowing Teal -->
+
+    <!-- Misc -->
+    <color name="divider">#1F2937</color>
+    <color name="shadow">#80000000</color>
+    <color name="scrim">#CC000000</color>
+
+    <color name="accent">#2DD4BF</color>
 </resources>

@@ -2,43 +2,50 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="TextAppearance.TM.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
-        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:letterSpacing">-0.02</item>
     </style>
 
     <style name="TextAppearance.TM.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
-        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_on_primary</item>
         <item name="android:textSize">32sp</item>
         <item name="android:letterSpacing">-0.02</item>
     </style>
 
     <style name="TextAppearance.TM.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">24sp</item>
     </style>
 
     <style name="TextAppearance.TM.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">20sp</item>
     </style>
 
     <style name="TextAppearance.TM.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">@font/outfit</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">18sp</item>
     </style>
 
     <style name="TextAppearance.TM.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/outfit</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">16sp</item>
     </style>
 
     <style name="TextAppearance.TM.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/outfit</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">13sp</item>
@@ -46,35 +53,41 @@
     </style>
 
     <style name="TextAppearance.TM.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:fontFamily">@font/outfit</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">15sp</item>
         <item name="android:lineSpacingMultiplier">1.25</item>
     </style>
 
     <style name="TextAppearance.TM.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/outfit</item>
         <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineSpacingMultiplier">1.3</item>
     </style>
 
     <style name="TextAppearance.TM.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:fontFamily">@font/outfit</item>
         <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">13sp</item>
         <item name="android:lineSpacingMultiplier">1.3</item>
     </style>
 
     <style name="TextAppearance.TM.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">@font/outfit</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">14sp</item>
     </style>
 
     <style name="TextAppearance.TM.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">@font/outfit</item>
         <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">12sp</item>
     </style>
 
     <style name="TextAppearance.TM.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:fontFamily">@font/outfit</item>
         <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">11sp</item>
     </style>
@@ -92,7 +105,6 @@
     <style name="TextAppearance.App.HeadlineMedium" parent="TextAppearance.TM.HeadlineMedium" />
     <style name="TextAppearance.App.BodyLarge" parent="TextAppearance.TM.BodyLarge" />
     <style name="TextAppearance.App.BodyMedium" parent="TextAppearance.TM.BodyMedium" />
-    <!-- Add this alongside the existing TextAppearance.App.* aliases -->
     <style name="TextAppearance.App.Body" parent="TextAppearance.TM.BodyMedium" />
 
 </resources>

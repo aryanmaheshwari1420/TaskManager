@@ -23,6 +23,8 @@
         <item name="colorOnSurface">@color/text_primary</item>
         <item name="colorOnSurfaceVariant">@color/text_secondary</item>
 
+        <item name="android:fontFamily">@font/outfit</item>
+
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
@@ -74,7 +76,7 @@
         <item name="cornerSizeBottomRight">@dimen/radius_xl</item>
     </style>
 
-    <!-- Existing custom styles preserved -->
+    <!-- Custom component style classes -->
     <style name="TaskCard">
         <item name="android:layout_marginStart">@dimen/space_16</item>
         <item name="android:layout_marginEnd">@dimen/space_16</item>

@@ -103,29 +103,59 @@ class MainActivity : AppCompatActivity() {
                 isCurrentlyActive: Boolean
             ) {
                 val itemView = viewHolder.itemView
+                val density = resources.displayMetrics.density
+                val marginHorizontal = (16 * density).toInt()
+                val marginBottom = (12 * density).toInt()
+
                 val bgColor = ContextCompat.getColor(this@MainActivity, R.color.error)
                 val icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_delete)
-                val iconMargin = (itemView.height - (icon?.intrinsicHeight ?: 0)) / 2
-                val background = ColorDrawable(bgColor)
+                
+                val verticalSpace = itemView.height - marginBottom
+                val iconHeight = icon?.intrinsicHeight ?: 0
+                val iconWidth = icon?.intrinsicWidth ?: 0
+                val iconMargin = (verticalSpace - iconHeight) / 2
+
+                val background = android.graphics.drawable.GradientDrawable().apply {
+                    setColor(bgColor)
+                    cornerRadius = 12 * density // matching card corners
+                }
 
                 if (dX > 0) {
-                    background.setBounds(itemView.left, itemView.top, itemView.left + dX.toInt(), itemView.bottom)
+                    val rightBounds = (itemView.left + marginHorizontal + dX.toInt()).coerceAtMost(itemView.right - marginHorizontal)
+                    background.setBounds(
+                        itemView.left + marginHorizontal,
+                        itemView.top,
+                        rightBounds,
+                        itemView.bottom - marginBottom
+                    )
                     icon?.setBounds(
-                        itemView.left + iconMargin, itemView.top + iconMargin,
-                        itemView.left + iconMargin + (icon.intrinsicWidth), itemView.bottom - iconMargin
+                        itemView.left + marginHorizontal + iconMargin,
+                        itemView.top + iconMargin,
+                        itemView.left + marginHorizontal + iconMargin + iconWidth,
+                        itemView.bottom - marginBottom - iconMargin
                     )
                 } else if (dX < 0) {
-                    background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    val leftBounds = (itemView.right - marginHorizontal + dX.toInt()).coerceAtLeast(itemView.left + marginHorizontal)
+                    background.setBounds(
+                        leftBounds,
+                        itemView.top,
+                        itemView.right - marginHorizontal,
+                        itemView.bottom - marginBottom
+                    )
                     icon?.setBounds(
-                        itemView.right - iconMargin - (icon.intrinsicWidth), itemView.top + iconMargin,
-                        itemView.right - iconMargin, itemView.bottom - iconMargin
+                        itemView.right - marginHorizontal - iconMargin - iconWidth,
+                        itemView.top + iconMargin,
+                        itemView.right - marginHorizontal - iconMargin,
+                        itemView.bottom - marginBottom - iconMargin
                     )
                 } else {
                     background.setBounds(0, 0, 0, 0)
                 }
 
-                background.draw(c)
-                icon?.draw(c)
+                if (dX != 0f) {
+                    background.draw(c)
+                    icon?.draw(c)
+                }
 
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
@@ -139,40 +169,47 @@ class MainActivity : AppCompatActivity() {
             updatePremiumUI()
             binding.layoutEmptyState.visibility = if (tasks.isEmpty()) View.VISIBLE else View.GONE
             binding.recyclerView.visibility = if (tasks.isEmpty()) View.GONE else View.VISIBLE
+            binding.layoutTaskHeader.visibility = if (tasks.isEmpty()) View.GONE else View.VISIBLE
+            binding.tvTaskCount.text = "${tasks.size} planned"
         }
 
-        // 4. FAB Click Handler
-        binding.fabAddTask.setOnClickListener {
+        // 4. Command Dock - Add Task
+        binding.btnDockAddTask.setOnClickListener {
             if (viewModel.canAddTask()) {
                 startActivity(Intent(this, AddEditTaskActivity::class.java))
             } else {
-                Toast.makeText(this, "Daily limit reached! Watch ad to unlock unlimited tasks.", Toast.LENGTH_LONG).show()
-                binding.btnUnlockPremium.visibility = View.VISIBLE
+                Toast.makeText(this, "Daily limit reached! Unlock Premium to add unlimited tasks.", Toast.LENGTH_LONG).show()
             }
         }
 
         // 5. Reward Ad Integration
-        binding.btnUnlockPremium.setOnClickListener {
+        val triggerPremiumAd = View.OnClickListener {
+            if (viewModel.isPremium) return@OnClickListener
             Toast.makeText(this, "Loading ad...", Toast.LENGTH_SHORT).show()
             AdManager.showRewardedAd(
                 activity = this,
                 onUserEarnedReward = {
                     viewModel.setPremiumForToday()
                     updatePremiumUI()
-                    Toast.makeText(this, "Premium features unlocked for today!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Premium workspace unlocked!", Toast.LENGTH_LONG).show()
                 },
                 onAdDismissed = {
                     AdManager.loadRewardedAd(this)
                 }
             )
         }
+        binding.premiumCard.setOnClickListener(triggerPremiumAd)
+        binding.btnUnlockPremium.setOnClickListener(triggerPremiumAd)
 
-        binding.btnAiGenerator.setOnClickListener {
+        // 6. AI Architect Actions
+        val openAiSheet = View.OnClickListener {
             AiTaskGeneratorBottomSheet().show(
                 supportFragmentManager,
                 AiTaskGeneratorBottomSheet.TAG
             )
         }
+        binding.btnDockAiGenerator.setOnClickListener(openAiSheet)
+        binding.btnAiHeroAction.setOnClickListener(openAiSheet)
 
         // 6. Search Functionality
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -208,15 +245,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updatePremiumUI() {
+        val totalTasksCount = viewModel.allTasks.value?.size ?: 0
+        val maxLimit = 10
         if (viewModel.isPremium) {
-            binding.btnUnlockPremium.visibility = View.GONE
+            binding.premiumCard.visibility = View.GONE
+            binding.tvProgressPercent.text = "Premium Workspace"
+            binding.progressTasks.max = 100
+            binding.progressTasks.progress = 100
+            binding.progressTasks.progressTintList = android.content.res.ColorStateList.valueOf(
+                ContextCompat.getColor(this, R.color.secondary)
+            )
         } else {
-            binding.btnUnlockPremium.visibility = View.VISIBLE
+            binding.premiumCard.visibility = View.VISIBLE
             if (!viewModel.canAddTask()) {
-                binding.btnUnlockPremium.text = "Unlock Unlimited Tasks (Watch Ad)"
+                binding.btnUnlockPremium.text = "👑 Limit Reached"
             } else {
-                binding.btnUnlockPremium.text = "Unlock Premium (Watch Ad)"
+                binding.btnUnlockPremium.text = "👑 Go Premium"
             }
+            
+            binding.tvProgressPercent.text = "$totalTasksCount / $maxLimit Tasks Used"
+            binding.progressTasks.max = maxLimit
+            binding.progressTasks.progress = totalTasksCount.coerceAtMost(maxLimit)
+            
+            val progressColor = if (totalTasksCount >= maxLimit) R.color.error else R.color.primary
+            binding.progressTasks.progressTintList = android.content.res.ColorStateList.valueOf(
+                ContextCompat.getColor(this, progressColor)
+            )
         }
     }
 }

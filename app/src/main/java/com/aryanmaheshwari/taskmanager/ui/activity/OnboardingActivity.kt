@@ -75,23 +75,24 @@ class OnboardingActivity : AppCompatActivity() {
         val items = listOf(
             OnboardingItem(
                 R.drawable.ic_launcher_foreground,
-                "Welcome to TaskManager",
-                "The easiest way to organize your daily tasks and boost your productivity."
+                "Unleash Productivity",
+                "Organize your daily workflow with a beautiful interface powered by Gemini AI."
             ),
             OnboardingItem(
                 R.drawable.ic_launcher_foreground,
-                "Add Tasks Quickly",
-                "Tap the plus button to add a new task with a title and description in seconds."
+                "Voice to Task",
+                "Speak naturally in English or Hindi to extract structured, actionable task lists."
             ),
             OnboardingItem(
                 R.drawable.ic_launcher_foreground,
-                "Manage Your Tasks",
-                "Edit tasks by tapping them or delete them easily to keep your list clean."
+                "Intelligent Checklists",
+                "Break down complex projects into small, achievable steps automatically."
             )
         )
         adapter = OnboardingAdapter(items)
         binding.viewPager.adapter = adapter
     }
+
 
     private fun setupIndicators() {
         val indicators = arrayOfNulls<ImageView>(adapter.itemCount)

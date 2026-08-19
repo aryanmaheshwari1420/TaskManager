@@ -69,32 +69,27 @@
     <!-- ================================================= -->
 
     <style name="Widget.App.Card" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardElevation">0dp</item>
         <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
         <item name="cardBackgroundColor">?attr/colorSurface</item>
-        <item name="strokeWidth">0dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
         <item name="android:stateListAnimator">@animator/card_elevation_animator</item>
     </style>
 
     <style name="Widget.App.Card.Task" parent="Widget.App.Card">
-        <item name="cardElevation">@dimen/spacing_1</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">?attr/colorOutlineVariant</item>
     </style>
 
     <style name="Widget.App.Card.AI" parent="Widget.App.Card">
-        <item name="cardBackgroundColor">?attr/colorPrimaryContainer</item>
+        <item name="cardBackgroundColor">@color/primary_light</item>
         <item name="strokeColor">?attr/colorPrimary</item>
-        <item name="strokeWidth">1dp</item>
     </style>
 
     <style name="Widget.App.Card.Statistics" parent="Widget.App.Card">
-        <item name="cardElevation">@dimen/spacing_2</item>
     </style>
 
     <style name="Widget.App.Card.Premium" parent="Widget.App.Card">
         <item name="strokeColor">@color/premium_gold</item>
-        <item name="strokeWidth">@dimen/spacing_2</item>
     </style>
 
     <!-- ================================================= -->

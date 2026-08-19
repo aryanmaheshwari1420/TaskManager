@@ -25,7 +25,7 @@
             android:background="@color/divider"
             android:importantForAccessibility="no" />
 
-        <!-- Sheet title -->
+        <!-- Sheet title with AI Gradient Badge -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,13 +37,13 @@
             android:paddingBottom="@dimen/space_16">
 
             <TextView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:text="✦"
-                android:textColor="@color/primary"
+                android:textColor="@color/white"
                 android:textSize="22sp"
                 android:gravity="center"
-                android:background="@drawable/bg_icon_badge" />
+                android:background="@drawable/gradient_primary" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -55,13 +55,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="AI Task Generator"
+                    android:text="AI Task Architect"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
                     android:textAppearance="@style/TextAppearance.TM.TitleLarge" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Powered by Google Gemini"
+                    android:text="Powered by Google Gemini Flash"
+                    android:textColor="@color/text_secondary"
                     android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
 
             </LinearLayout>
@@ -84,7 +87,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="What do you want to accomplish?"
+                android:text="Describe your goal"
+                android:textColor="@color/text_primary"
                 android:textAppearance="@style/TextAppearance.TM.TitleMedium" />
 
             <EditText
@@ -93,12 +97,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_12"
                 android:background="@drawable/bg_input"
-                android:hint="e.g. Prepare Flutter interview, Plan Goa trip…"
+                android:hint="e.g., Plan my workout schedule, design study guide…"
+                android:textColor="@color/text_primary"
                 android:textColorHint="@color/text_secondary"
                 android:textAppearance="@style/TextAppearance.TM.BodyLarge"
                 android:padding="@dimen/space_16"
                 android:gravity="top|start"
-                android:minHeight="80dp"
+                android:minHeight="90dp"
                 android:maxLines="4"
                 android:inputType="textMultiLine|textCapSentences"
                 android:imeOptions="actionDone" />
@@ -107,7 +112,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_20"
-                android:text="Quick suggestions"
+                android:text="Quick templates"
+                android:textColor="@color/text_secondary"
                 android:textAppearance="@style/TextAppearance.TM.TitleSmall" />
 
             <com.google.android.material.chip.ChipGroup
@@ -123,6 +129,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Prepare Flutter interview"
+                    app:chipBackgroundColor="@color/primary_light"
+                    app:chipStrokeWidth="0dp"
+                    android:textColor="@color/primary"
                     android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
 
                 <com.google.android.material.chip.Chip
@@ -131,6 +140,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Plan Goa trip"
+                    app:chipBackgroundColor="@color/primary_light"
+                    app:chipStrokeWidth="0dp"
+                    android:textColor="@color/primary"
                     android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
 
                 <com.google.android.material.chip.Chip
@@ -139,6 +151,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Organize my room"
+                    app:chipBackgroundColor="@color/primary_light"
+                    app:chipStrokeWidth="0dp"
+                    android:textColor="@color/primary"
                     android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
 
                 <com.google.android.material.chip.Chip
@@ -147,6 +162,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Learn Android"
+                    app:chipBackgroundColor="@color/primary_light"
+                    app:chipStrokeWidth="0dp"
+                    android:textColor="@color/primary"
                     android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
 
                 <com.google.android.material.chip.Chip
@@ -155,6 +173,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Wedding planning"
+                    app:chipBackgroundColor="@color/primary_light"
+                    app:chipStrokeWidth="0dp"
+                    android:textColor="@color/primary"
                     android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
 
             </com.google.android.material.chip.ChipGroup>
@@ -168,29 +189,32 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnInputCancel"
-                    style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="@dimen/space_8"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="@dimen/space_12"
                     android:text="Cancel"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="@color/white"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/secondary"
+                    app:cornerRadius="20dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnGenerate"
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:text="Generate"
-                    android:textColor="@color/on_primary"
+                    android:textColor="@color/white"
+                    android:textAllCaps="false"
                     android:textStyle="bold"
-                    android:paddingStart="@dimen/space_24"
-                    android:paddingEnd="@dimen/space_24"
                     app:backgroundTint="@color/primary"
-                    app:cornerRadius="@dimen/radius_md" />
+                    app:cornerRadius="20dp" />
 
             </LinearLayout>
 
             <!-- Divider for voice section -->
             <View
+                android:id="@+id/voiceDivider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/space_20"
@@ -199,19 +223,22 @@
 
             <!-- Voice input section -->
             <TextView
+                android:id="@+id/tvVoiceLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Or speak your goal"
+                android:text="Or extract task using voice (Hindi/English)"
+                android:textColor="@color/text_secondary"
                 android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
 
             <LinearLayout
+                android:id="@+id/layoutVoiceControls"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:layout_marginTop="@dimen/space_12">
 
-                <!-- Microphone button -->
+                <!-- Microphone button (glowing outer card) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMicrophone"
                     android:layout_width="56dp"
@@ -224,11 +251,12 @@
                     android:insetBottom="0dp"
                     app:iconGravity="textStart"
                     app:icon="@android:drawable/ic_btn_speak_now"
+                    app:iconTint="@color/white"
                     android:contentDescription="Record voice input"
                     app:backgroundTint="@color/primary"
                     app:cornerRadius="28dp" />
 
-                <!-- Recording indicator (hidden by default) -->
+                <!-- Recording indicator -->
                 <LinearLayout
                     android:id="@+id/layoutRecordingIndicator"
                     android:layout_width="0dp"
@@ -237,6 +265,8 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/space_16"
+                    android:background="@drawable/bg_glass_panel"
+                    android:backgroundTint="@color/error_container"
                     android:visibility="gone"
                     android:layout_marginStart="@dimen/space_12">
 
@@ -252,7 +282,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Recording..."
+                        android:text="Speak now..."
+                        android:textStyle="bold"
                         android:textAppearance="@style/TextAppearance.TM.BodyLarge"
                         android:textColor="@color/error" />
 
@@ -271,6 +302,7 @@
                     android:insetBottom="0dp"
                     android:text="✓"
                     android:textSize="24sp"
+                    android:textColor="@color/white"
                     android:visibility="gone"
                     android:layout_marginStart="@dimen/space_8"
                     app:backgroundTint="@color/success"
@@ -298,63 +330,56 @@
 
         </LinearLayout>
 
-        <!-- PANEL 2 — LOADING (skeleton pulse) -->
+        <!-- PANEL 2 — LOADING (Cosmic Center Glow) -->
         <LinearLayout
             android:id="@+id/panelLoading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/space_20"
+            android:gravity="center"
+            android:paddingHorizontal="32dp"
+            android:paddingVertical="40dp"
             android:visibility="gone"
-            tools:visibility="gone">
+            tools:visibility="visible">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <!-- Dynamic Prompt Heading (Editorial Script Style) -->
+            <TextView
+                android:id="@+id/tvLoadingPrompt"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="@dimen/space_20">
+                android:text="Planning your task flow..."
+                android:textStyle="italic"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:textColor="@color/text_primary"
+                android:textAppearance="@style/TextAppearance.TM.TitleLarge" />
+
+            <!-- Circular center glow ring progress -->
+            <FrameLayout
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/bg_glass_panel"
+                android:backgroundTint="@color/primary_light"
+                android:padding="24dp">
 
                 <ProgressBar
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:indeterminateTint="@color/primary" />
+            </FrameLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/space_12"
-                    android:text="Gemini is writing your task…"
-                    android:textAppearance="@style/TextAppearance.TM.TitleMedium" />
-            </LinearLayout>
-
-            <!-- Skeleton placeholder bars, pulsed via ObjectAnimator in Kotlin -->
-            <View
-                android:id="@+id/skeletonLine1"
-                android:layout_width="220dp"
-                android:layout_height="18dp"
-                android:layout_marginBottom="@dimen/space_12"
-                android:background="@drawable/bg_skeleton" />
-
-            <View
-                android:id="@+id/skeletonLine2"
-                android:layout_width="match_parent"
-                android:layout_height="14dp"
-                android:layout_marginBottom="@dimen/space_8"
-                android:background="@drawable/bg_skeleton" />
-
-            <View
-                android:id="@+id/skeletonLine3"
-                android:layout_width="180dp"
-                android:layout_height="14dp"
-                android:layout_marginBottom="@dimen/space_20"
-                android:background="@drawable/bg_skeleton" />
-
-            <View
-                android:id="@+id/skeletonLine4"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_skeleton" />
+            <!-- Bottom status info -->
+            <TextView
+                android:id="@+id/tvLoadingStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Extracting task parameters..."
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:letterSpacing="0.05"
+                android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
 
         </LinearLayout>
 
@@ -374,12 +399,13 @@
                 android:layout_marginEnd="@dimen/space_20"
                 android:layout_marginTop="@dimen/space_16"
                 app:cardCornerRadius="@dimen/radius_lg"
-                app:cardElevation="@dimen/elevation_1"
-                app:cardBackgroundColor="@color/bg_main">
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/transparent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/bg_glass_panel"
                     android:orientation="vertical"
                     android:padding="@dimen/space_16">
 
@@ -387,6 +413,7 @@
                         android:id="@+id/tvPreviewTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
                         android:textAppearance="@style/TextAppearance.TM.TitleLarge"
                         tools:text="Prepare Flutter interview" />
 
@@ -395,6 +422,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_8"
+                        android:textColor="@color/text_secondary"
                         android:textAppearance="@style/TextAppearance.TM.BodyMedium"
                         tools:text="Go through Flutter fundamentals and prepare answers for common interview questions." />
 
@@ -410,8 +438,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             app:chipStrokeWidth="0dp"
-                            tools:text="HIGH"
-                            tools:chipBackgroundColor="@color/error_container" />
+                            android:textColor="@color/error"
+                            app:chipBackgroundColor="@color/error_container"
+                            android:textStyle="bold"
+                            tools:text="HIGH" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipCategory"
@@ -419,8 +449,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             app:chipStrokeWidth="0dp"
-                            tools:text="Learning"
-                            tools:chipBackgroundColor="@color/primary_light" />
+                            android:textColor="@color/primary"
+                            app:chipBackgroundColor="@color/primary_light"
+                            android:textStyle="bold"
+                            tools:text="Learning" />
 
                     </com.google.android.material.chip.ChipGroup>
 
@@ -442,6 +474,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/space_8"
+                            android:textColor="@color/text_secondary"
                             android:textAppearance="@style/TextAppearance.TM.BodyMedium"
                             tools:text="Due in 3 days" />
 
@@ -457,7 +490,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Checklist"
+                        android:text="Actionable Steps"
+                        android:textColor="@color/text_primary"
                         android:textAppearance="@style/TextAppearance.TM.TitleSmall" />
 
                     <LinearLayout
@@ -496,21 +530,20 @@
                     android:layout_height="48dp"
                     android:layout_weight="1"
                     android:layout_marginStart="@dimen/space_8"
-                    android:text="Edit"
+                    android:text="Refine"
                     app:strokeColor="@color/primary"
                     android:textColor="@color/primary" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSave"
+                    style="@style/Widget.App.Button.Gradient"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_weight="1"
                     android:layout_marginStart="@dimen/space_8"
                     android:text="Save"
                     android:textColor="@color/on_primary"
-                    android:textStyle="bold"
-                    app:backgroundTint="@color/primary"
-                    app:cornerRadius="@dimen/radius_md" />
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
