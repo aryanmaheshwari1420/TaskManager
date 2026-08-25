@@ -9,7 +9,7 @@
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:minHeight">@dimen/button_height</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.App.MediumComponent</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Button</item>
         <item name="android:textAppearance">@style/TextAppearance.App.Label</item>
         <item name="android:stateListAnimator">@animator/button_click_animator</item>
     </style>
@@ -21,7 +21,7 @@
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:minHeight">@dimen/button_height</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.App.MediumComponent</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Button</item>
         <item name="android:textAppearance">@style/TextAppearance.App.Label</item>
         <item name="android:stateListAnimator">@animator/button_click_animator</item>
     </style>
@@ -30,15 +30,15 @@
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:minHeight">@dimen/button_height</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.App.MediumComponent</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Button</item>
         <item name="android:textAppearance">@style/TextAppearance.App.Label</item>
         <item name="android:stateListAnimator">@animator/button_click_animator</item>
     </style>
 
     <style name="Widget.App.Button.Gradient" parent="Widget.App.Button.Primary">
-        <item name="android:background">@drawable/gradient_primary</item>
+        <item name="android:background">@drawable/btn_gradient_selector</item>
         <item name="backgroundTint">@null</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColor">@color/btn_gradient_text_selector</item>
     </style>
 
     <style name="Widget.App.Button.Danger" parent="Widget.App.Button.Primary">

@@ -14,5 +14,6 @@ data class GeneratedTask(
     val category: CategoryEntity?,
     /** Relative due date, e.g. "In 3 days", "Next Monday" */
     val dueDate: String,
-    val checklist: List<ChecklistItem>
+    val checklist: List<ChecklistItem>,
+    val transcript: String? = null
 ) : Serializable

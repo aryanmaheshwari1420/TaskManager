@@ -12,6 +12,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import android.widget.Toast
 
 /**
  * AdManager handles loading and showing of Interstitial and Rewarded Ads.
@@ -112,6 +113,7 @@ object AdManager {
             }
         } else {
             Log.d(TAG, "Rewarded not ready")
+            Toast.makeText(activity, "Ad is not ready yet. Please try again in a few seconds.", Toast.LENGTH_SHORT).show()
             onAdDismissed()
             loadRewardedAd(activity)
         }

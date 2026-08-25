@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aryanmaheshwari.taskmanager.R
 import com.aryanmaheshwari.taskmanager.data.local.Task
 import com.aryanmaheshwari.taskmanager.databinding.ItemTaskBinding
+import com.aryanmaheshwari.taskmanager.utils.setCardFeedback
 
 class TaskAdapter(
     private val onEdit: (Task) -> Unit,
@@ -91,6 +92,7 @@ class TaskAdapter(
         
         holder.binding.layoutTags.visibility = if (hasTags) View.VISIBLE else View.GONE
         
+        holder.itemView.setCardFeedback()
         holder.itemView.setOnClickListener { onEdit(task) }
     }
 

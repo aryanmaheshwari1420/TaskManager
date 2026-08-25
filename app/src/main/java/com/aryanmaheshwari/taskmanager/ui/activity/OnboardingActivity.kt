@@ -17,6 +17,7 @@ import com.aryanmaheshwari.taskmanager.MainActivity
 import com.aryanmaheshwari.taskmanager.R
 import com.aryanmaheshwari.taskmanager.databinding.ActivityOnboardingBinding
 import com.aryanmaheshwari.taskmanager.databinding.ItemOnboardingPageBinding
+import com.aryanmaheshwari.taskmanager.utils.setClickFeedback
 import kotlin.math.abs
 
 class OnboardingActivity : AppCompatActivity() {
@@ -36,13 +37,14 @@ class OnboardingActivity : AppCompatActivity() {
         // Add Premium Page Transformer
         if (!areAnimationsDisabled()) {
             binding.viewPager.setPageTransformer(OnboardingPageTransformer())
-        }
-        binding.viewPager.setPageTransformer { page, position ->
-            page.apply {
-                alpha = 0.4f + (1 - kotlin.math.abs(position)) * 0.6f
-                val scale = 0.92f + (1 - kotlin.math.abs(position)) * 0.08f
-                scaleX = scale
-                scaleY = scale
+        } else {
+            binding.viewPager.setPageTransformer { page, position ->
+                page.apply {
+                    alpha = 0.4f + (1 - kotlin.math.abs(position)) * 0.6f
+                    val scale = 0.92f + (1 - kotlin.math.abs(position)) * 0.08f
+                    scaleX = scale
+                    scaleY = scale
+                }
             }
         }
 
@@ -57,6 +59,9 @@ class OnboardingActivity : AppCompatActivity() {
                 }
             }
         })
+
+        binding.btnNext.setClickFeedback()
+        binding.btnSkip.setClickFeedback()
 
         binding.btnNext.setOnClickListener {
             if (binding.viewPager.currentItem + 1 < adapter.itemCount) {

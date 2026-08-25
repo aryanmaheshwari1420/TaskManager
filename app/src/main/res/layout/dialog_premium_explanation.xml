@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/bg_glass_panel"
+    android:backgroundTint="@color/bg_card">
+
+    <TextView
+        android:id="@+id/tvPremiumTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="👑 Premium Feature"
+        android:textColor="@color/premium_gold"
+        android:textAppearance="@style/TextAppearance.TM.TitleLarge"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvPremiumMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="Unlock premium access to create more tasks and continue using the app without the daily limit.\n\nWatch a short ad to get full access for today."
+        android:textColor="@color/text_secondary"
+        android:textAppearance="@style/TextAppearance.TM.BodyMedium" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnWatchAd"
+            style="@style/Widget.App.Button.Gradient"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Watch Ad &amp; Unlock"
+            android:textColor="@color/white" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMaybeLater"
+            style="@style/Widget.App.Button.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="Maybe Later"
+            android:textColor="@color/text_secondary"
+            app:strokeColor="@color/divider" />
+
+    </LinearLayout>
+</LinearLayout>

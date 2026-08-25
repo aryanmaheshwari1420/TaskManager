@@ -110,6 +110,20 @@
 
     </LinearLayout>
 
+    <!-- Subtle Connectivity status banner -->
+    <TextView
+        android:id="@+id/tvConnectivityStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface_variant"
+        android:gravity="center"
+        android:paddingVertical="4dp"
+        android:text="Offline • Changes saved locally"
+        android:textColor="@color/text_secondary"
+        android:textSize="11sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader" />
+
     <!-- Top Fixed Search Capsule -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/searchCard"
@@ -122,7 +136,7 @@
         app:cardElevation="0dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/divider"
-        app:layout_constraintTop_toBottomOf="@id/layoutHeader">
+        app:layout_constraintTop_toBottomOf="@id/tvConnectivityStatus">
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
@@ -144,13 +158,13 @@
         android:layout_marginTop="12dp"
         android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/searchCard"
-        app:layout_constraintBottom_toTopOf="@id/adView">
+        app:layout_constraintBottom_toTopOf="@id/layoutActionZone">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="116dp">
+            android:paddingBottom="24dp">
 
             <!-- AI Architect Hero Highlight -->
             <com.google.android.material.card.MaterialCardView
@@ -197,11 +211,8 @@
                         android:text="✦ Try AI Architect"
                         android:textAllCaps="false"
                         android:textSize="11sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
                         android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        app:cornerRadius="16dp" />
+                        android:insetBottom="0dp" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -224,8 +235,7 @@
                     android:layout_centerVertical="true"
                     android:text="Active Tasks"
                     android:textColor="@color/text_primary"
-                    android:textAppearance="@style/TextAppearance.TM.TitleMedium"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.TM.TitleMedium" />
 
                 <TextView
                     android:id="@+id/tvTaskCount"
@@ -282,8 +292,7 @@
                     android:layout_marginTop="16dp"
                     android:text="Your workspace is ready."
                     android:textColor="@color/text_primary"
-                    android:textAppearance="@style/TextAppearance.TM.TitleMedium"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.TM.TitleMedium" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -299,59 +308,64 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Floating Centered Command Dock -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/layoutCommandDock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        app:cardCornerRadius="26dp"
-        app:cardElevation="8dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/divider"
-        app:cardBackgroundColor="@android:color/transparent"
+    <!-- Slightly Darker Bottom Action Zone containing Centered Command Dock -->
+    <FrameLayout
+        android:id="@+id/layoutActionZone"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/surface_variant"
         app:layout_constraintBottom_toTopOf="@id/adView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/layoutCommandDock"
             android:layout_width="wrap_content"
-            android:layout_height="52dp"
-            android:background="@drawable/bg_glass_panel"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingHorizontal="16dp">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:cardCornerRadius="26dp"
+            app:cardElevation="8dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/divider"
+            app:cardBackgroundColor="@android:color/transparent">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDockAiGenerator"
-                style="@style/Widget.Material3.Button.TextButton"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="✦ AI Architect"
-                android:textAllCaps="false"
-                android:textColor="@color/primary"
-                android:textStyle="bold"
-                android:textSize="13sp" />
+                android:layout_height="52dp"
+                android:background="@drawable/bg_glass_panel"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingHorizontal="16dp">
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="20dp"
-                android:layout_marginHorizontal="8dp"
-                android:background="@color/divider" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDockAiGenerator"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="✦ AI Architect"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary"
+                    android:textAppearance="@style/TextAppearance.App.Label" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDockAddTask"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="+ New Task"
-                android:textAllCaps="false"
-                android:textColor="@color/text_primary"
-                android:textStyle="bold"
-                android:textSize="13sp" />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="20dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="@color/divider" />
 
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDockAddTask"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="+ New Task"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_primary"
+                    android:textAppearance="@style/TextAppearance.App.Label" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 
     <!-- Bottom Pinned Ad View -->
     <com.google.android.gms.ads.AdView

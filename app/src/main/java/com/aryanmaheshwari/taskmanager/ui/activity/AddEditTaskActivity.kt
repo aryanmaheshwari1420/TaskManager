@@ -13,6 +13,9 @@ import com.aryanmaheshwari.taskmanager.R
 import com.aryanmaheshwari.taskmanager.data.local.Task
 import com.aryanmaheshwari.taskmanager.databinding.ActivityAddEditBinding
 import com.aryanmaheshwari.taskmanager.ui.viewmodel.TaskViewModel
+import com.aryanmaheshwari.taskmanager.utils.setClickFeedback
+import com.aryanmaheshwari.taskmanager.utils.setCardFeedback
+import com.aryanmaheshwari.taskmanager.utils.setIconButtonFeedback
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -32,6 +35,17 @@ class AddEditTaskActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Apply visual interaction animations
+        binding.btnBack.setIconButtonFeedback()
+        binding.btnSave.setClickFeedback()
+        binding.btnDelete.setClickFeedback()
+        binding.cardPriorityLow.setCardFeedback()
+        binding.cardPriorityMedium.setCardFeedback()
+        binding.cardPriorityHigh.setCardFeedback()
+        binding.cardPriorityUrgent.setCardFeedback()
+        binding.cardCategorySelector.setCardFeedback()
+        binding.cardDueDateSelector.setCardFeedback()
 
         // 1. Back Navigation
         binding.btnBack.setOnClickListener { finish() }

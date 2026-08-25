@@ -120,12 +120,11 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnGenerate"
-                        style="@style/Widget.App.Button.Primary"
+                        style="@style/Widget.App.Button.Gradient"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_8"
-                        android:text="Generate with AI"
-                        android:backgroundTint="@color/color_ai_primary" />
+                        android:text="Generate with AI" />
 
                 </LinearLayout>
 
@@ -225,11 +224,10 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSaveTasks"
-                style="@style/Widget.App.Button.Primary"
+                style="@style/Widget.App.Button.Gradient"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Add Selected Tasks"
-                android:backgroundTint="@color/color_ai_primary" />
+                android:text="Add Selected Tasks" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

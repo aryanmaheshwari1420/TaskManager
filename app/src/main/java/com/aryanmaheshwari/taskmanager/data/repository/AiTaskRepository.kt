@@ -32,6 +32,15 @@ class AiTaskRepository(private val geminiService: GeminiService = GeminiService(
                 Result.failure(IOException("Request timed out. Please check your connection and try again."))
             } catch (e: UnknownHostException) {
                 Result.failure(IOException("No internet connection. Please go online and try again."))
+            } catch (e: retrofit2.HttpException) {
+                val userFriendlyMsg = when (e.code()) {
+                    503 -> "Gemini AI is experiencing high demand right now. Please try again in a few seconds."
+                    429 -> "Too many requests. Please wait a moment before trying again."
+                    403 -> "Authentication failed. Please verify your API key."
+                    400 -> "Bad request. The prompt might be invalid or flagged."
+                    else -> "AI service temporarily unavailable (HTTP ${e.code()}). Please try again."
+                }
+                Result.failure(IOException(userFriendlyMsg, e))
             } catch (e: IllegalArgumentException) {
                 // API key not configured
                 Result.failure(e)
@@ -72,6 +81,15 @@ class AiTaskRepository(private val geminiService: GeminiService = GeminiService(
                 Result.failure(IOException("Request timed out. Please check your connection and try again."))
             } catch (e: UnknownHostException) {
                 Result.failure(IOException("No internet connection. Please go online and try again."))
+            } catch (e: retrofit2.HttpException) {
+                val userFriendlyMsg = when (e.code()) {
+                    503 -> "Gemini AI is experiencing high demand right now. Please try again in a few seconds."
+                    429 -> "Too many requests. Please wait a moment before trying again."
+                    403 -> "Authentication failed. Please verify your API key."
+                    400 -> "Bad request. The prompt might be invalid or flagged."
+                    else -> "AI service temporarily unavailable (HTTP ${e.code()}). Please try again."
+                }
+                Result.failure(IOException(userFriendlyMsg, e))
             } catch (e: IllegalArgumentException) {
                 // API key not configured or file not found
                 Result.failure(e)

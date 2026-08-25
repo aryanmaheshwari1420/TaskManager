@@ -82,11 +82,9 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
         Current time: $currentTime
         Timezone: $timezone
         
-        Extract ONLY information actually present in the speech.
-        Do NOT invent missing information.
-        
         Expected format:
         {
+          "transcript": "Exact transcription of what the user said in Hindi/English mixed speech (as spoken)",
           "title": "Task title (required)",
           "description": "Optional description",
           "priority": "HIGH/MEDIUM/LOW or null",
@@ -103,7 +101,7 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
         5. Return ONLY valid JSON.
         6. Never return markdown or code blocks.
         7. Never explain.
-        8. If title is missing, return null or empty string.
+        8. Transcribe the raw speech as accurately as possible and write it in the "transcript" field.
         
         CRITICAL: Respond ONLY with the raw JSON object.
     """.trimIndent()
@@ -249,7 +247,8 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
                 priority    = obj.optString("priority", "MEDIUM").uppercase().trim(),
                 category    = if (categoryName.isNotBlank()) CategoryEntity(categoryName) else null,
                 dueDate     = obj.optString("dueDate", "").trim(),
-                checklist   = checklist
+                checklist   = checklist,
+                transcript  = obj.optString("transcript", "").trim().takeIf { it.isNotBlank() }
             )
         } catch (e: JSONException) {
             Log.e(TAG, "JSON parse failure: $jsonText", e)

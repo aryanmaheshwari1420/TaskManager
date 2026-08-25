@@ -72,7 +72,19 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
         return false
     }
 
-    fun search(query: String): LiveData<List<Task>> = repository.searchTasks("%$query%")
+    private val searchQuery = MutableLiveData<String>("")
+
+    val filteredTasks: LiveData<List<Task>> = searchQuery.switchMap { query ->
+        if (query.isEmpty()) {
+            repository.allTasks
+        } else {
+            repository.searchTasks("%$query%")
+        }
+    }
+
+    fun setSearchQuery(query: String) {
+        searchQuery.value = query
+    }
 
     fun delete(task: Task) = viewModelScope.launch(Dispatchers.IO) { repository.delete(task) }
 

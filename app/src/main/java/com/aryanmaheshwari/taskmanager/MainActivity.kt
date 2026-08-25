@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -23,6 +24,9 @@ import android.graphics.Canvas
 import androidx.core.content.ContextCompat
 import android.graphics.drawable.ColorDrawable
 import com.google.android.gms.ads.RequestConfiguration
+import com.aryanmaheshwari.taskmanager.utils.setClickFeedback
+import com.aryanmaheshwari.taskmanager.utils.setCardFeedback
+import com.aryanmaheshwari.taskmanager.utils.NetworkMonitor
 
 /**
  * MainActivity handles the task list and ad integration points.
@@ -32,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: TaskViewModel by viewModels()
     private lateinit var adapter: TaskAdapter
+    private lateinit var networkMonitor: NetworkMonitor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +52,16 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Initialize Network Monitor
+        networkMonitor = NetworkMonitor(this)
+        networkMonitor.isOnline.observe(this) { isOnline ->
+            if (isOnline) {
+                binding.tvConnectivityStatus.visibility = View.GONE
+            } else {
+                binding.tvConnectivityStatus.visibility = View.VISIBLE
+            }
+        }
 
         // 1. Initialize AdMob and Load Ads
         val requestConfiguration = RequestConfiguration.Builder()
@@ -164,13 +179,16 @@ class MainActivity : AppCompatActivity() {
         ItemTouchHelper(swipeHandler).attachToRecyclerView(binding.recyclerView)
 
         // 3. Observers
-        viewModel.allTasks.observe(this) { tasks ->
+        viewModel.filteredTasks.observe(this) { tasks ->
             adapter.setTasks(tasks)
-            updatePremiumUI()
             binding.layoutEmptyState.visibility = if (tasks.isEmpty()) View.VISIBLE else View.GONE
             binding.recyclerView.visibility = if (tasks.isEmpty()) View.GONE else View.VISIBLE
             binding.layoutTaskHeader.visibility = if (tasks.isEmpty()) View.GONE else View.VISIBLE
             binding.tvTaskCount.text = "${tasks.size} planned"
+        }
+
+        viewModel.allTasks.observe(this) {
+            updatePremiumUI()
         }
 
         // 4. Command Dock - Add Task
@@ -178,25 +196,41 @@ class MainActivity : AppCompatActivity() {
             if (viewModel.canAddTask()) {
                 startActivity(Intent(this, AddEditTaskActivity::class.java))
             } else {
-                Toast.makeText(this, "Daily limit reached! Unlock Premium to add unlimited tasks.", Toast.LENGTH_LONG).show()
+                showPremiumExplanationDialog {
+                    Toast.makeText(this, "Loading ad...", Toast.LENGTH_SHORT).show()
+                    AdManager.showRewardedAd(
+                        activity = this,
+                        onUserEarnedReward = {
+                            viewModel.setPremiumForToday()
+                            updatePremiumUI()
+                            Toast.makeText(this, "Premium workspace unlocked!", Toast.LENGTH_LONG).show()
+                            startActivity(Intent(this, AddEditTaskActivity::class.java))
+                        },
+                        onAdDismissed = {
+                            AdManager.loadRewardedAd(this)
+                        }
+                    )
+                }
             }
         }
 
         // 5. Reward Ad Integration
         val triggerPremiumAd = View.OnClickListener {
             if (viewModel.isPremium) return@OnClickListener
-            Toast.makeText(this, "Loading ad...", Toast.LENGTH_SHORT).show()
-            AdManager.showRewardedAd(
-                activity = this,
-                onUserEarnedReward = {
-                    viewModel.setPremiumForToday()
-                    updatePremiumUI()
-                    Toast.makeText(this, "Premium workspace unlocked!", Toast.LENGTH_LONG).show()
-                },
-                onAdDismissed = {
-                    AdManager.loadRewardedAd(this)
-                }
-            )
+            showPremiumExplanationDialog {
+                Toast.makeText(this, "Loading ad...", Toast.LENGTH_SHORT).show()
+                AdManager.showRewardedAd(
+                    activity = this,
+                    onUserEarnedReward = {
+                        viewModel.setPremiumForToday()
+                        updatePremiumUI()
+                        Toast.makeText(this, "Premium workspace unlocked!", Toast.LENGTH_LONG).show()
+                    },
+                    onAdDismissed = {
+                        AdManager.loadRewardedAd(this)
+                    }
+                )
+            }
         }
         binding.premiumCard.setOnClickListener(triggerPremiumAd)
         binding.btnUnlockPremium.setOnClickListener(triggerPremiumAd)
@@ -211,15 +245,28 @@ class MainActivity : AppCompatActivity() {
         binding.btnDockAiGenerator.setOnClickListener(openAiSheet)
         binding.btnAiHeroAction.setOnClickListener(openAiSheet)
 
-        // 6. Search Functionality
+        // Apply visual interaction animations
+        binding.btnDockAddTask.setClickFeedback()
+        binding.premiumCard.setCardFeedback()
+        binding.btnUnlockPremium.setClickFeedback()
+        binding.btnDockAiGenerator.setClickFeedback()
+        binding.btnAiHeroAction.setClickFeedback()
+        binding.aiHeroCard.setCardFeedback()
+
+        // 6. Search Functionality & Focus animation
+        binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            val strokeColor = if (hasFocus) {
+                ContextCompat.getColor(this, R.color.primary)
+            } else {
+                ContextCompat.getColor(this, R.color.divider)
+            }
+            binding.searchCard.strokeColor = strokeColor
+        }
+
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?) = false
             override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.search(newText ?: "").observe(this@MainActivity) { results ->
-                    adapter.setTasks(results)
-                    binding.layoutEmptyState.visibility = if (results.isEmpty()) View.VISIBLE else View.GONE
-                    binding.recyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
-                }
+                viewModel.setSearchQuery(newText ?: "")
                 return true
             }
         })
@@ -242,6 +289,29 @@ class MainActivity : AppCompatActivity() {
 
         AdManager.loadInterstitialAd(this)
         AdManager.loadRewardedAd(this)
+    }
+
+    private fun showPremiumExplanationDialog(onConfirm: () -> Unit) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_premium_explanation, null)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.Widget_App_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        val btnWatchAd = dialogView.findViewById<View>(R.id.btnWatchAd)
+        val btnMaybeLater = dialogView.findViewById<View>(R.id.btnMaybeLater)
+
+        btnWatchAd.setClickFeedback()
+        btnMaybeLater.setClickFeedback()
+
+        btnWatchAd.setOnClickListener {
+            dialog.dismiss()
+            onConfirm()
+        }
+        btnMaybeLater.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     private fun updatePremiumUI() {
@@ -272,5 +342,10 @@ class MainActivity : AppCompatActivity() {
                 ContextCompat.getColor(this, progressColor)
             )
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        networkMonitor.unregister()
     }
 }

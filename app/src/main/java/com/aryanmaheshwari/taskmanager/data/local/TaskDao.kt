@@ -27,7 +27,7 @@ interface TaskDao {
     fun getAllTasks(): LiveData<List<Task>>
 
     // % wildcards allow partial title match
-    @Query("SELECT * FROM task_table WHERE title LIKE :query")
+    @Query("SELECT * FROM task_table WHERE title LIKE :query ORDER BY id DESC")
     fun searchTasks(query: String): LiveData<List<Task>>
 
     @Query("SELECT COUNT(*) FROM task_table WHERE title = :title")
