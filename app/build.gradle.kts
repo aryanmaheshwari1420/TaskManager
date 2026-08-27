@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.aryanmaheshwari.taskmanager"
-    compileSdk = 35
+    compileSdk = 36
 
     val localProperties = Properties()
     val localPropertiesFile = rootProject.file("local.properties")
@@ -20,12 +20,12 @@ android {
     defaultConfig {
         applicationId = "com.aryanmaheshwari.taskmanager"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 8
-        versionName = "1.0.7"
+        targetSdk = 36
+        versionCode = 10
+        versionName = "1.0.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        
+
         buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
     }
 
@@ -111,7 +111,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.cardview:cardview:1.0.0")
-    
+
     // Retrofit + OkHttp for API calls
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
