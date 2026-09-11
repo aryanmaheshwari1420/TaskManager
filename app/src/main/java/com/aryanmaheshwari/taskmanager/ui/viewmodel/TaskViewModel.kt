@@ -38,8 +38,8 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
     private val FREE_TASK_LIMIT = 10
 
     init {
-        val dao = TaskDatabase.getDatabase(application).taskDao()
-        repository = TaskRepository(dao)
+        val database = TaskDatabase.getDatabase(application)
+        repository = TaskRepository(database.taskDao(), database.checklistItemDao())
         allTasks = repository.allTasks
     }
 
@@ -72,7 +72,19 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
         return false
     }
 
-    fun search(query: String): LiveData<List<Task>> = repository.searchTasks("%$query%")
+    private val searchQuery = MutableLiveData<String>("")
+
+    val filteredTasks: LiveData<List<Task>> = searchQuery.switchMap { query ->
+        if (query.isEmpty()) {
+            repository.allTasks
+        } else {
+            repository.searchTasks("%$query%")
+        }
+    }
+
+    fun setSearchQuery(query: String) {
+        searchQuery.value = query
+    }
 
     fun delete(task: Task) = viewModelScope.launch(Dispatchers.IO) { repository.delete(task) }
 

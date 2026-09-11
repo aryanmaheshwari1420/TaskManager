@@ -2,75 +2,143 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="10dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="3dp"
-    app:cardBackgroundColor="@color/bg_card">
+    android:layout_marginStart="@dimen/space_16"
+    android:layout_marginEnd="@dimen/space_16"
+    android:layout_marginBottom="@dimen/space_12"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="@dimen/radius_lg"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_glass_panel"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="@dimen/space_16"
         android:gravity="center_vertical">
 
-        <!-- Coloured icon badge -->
-        <TextView
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+        <!-- Custom Circular Bullet/Status Icon -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_icon_badge"
-            android:gravity="center"
-            android:text="✓"
-            android:textColor="@color/primary"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:backgroundTint="@color/primary_light"
+            android:padding="10dp">
 
-        <!-- Title + description -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_check_circle"
+                app:tint="@color/primary"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="14dp">
+            android:layout_marginStart="@dimen/space_16">
 
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.TM.TitleMedium"
                 android:maxLines="1"
                 android:ellipsize="end"
-                tools:text="Buy groceries"
-                xmlns:tools="http://schemas.android.com/tools" />
+                tools:text="Buy groceries" />
 
             <TextView
                 android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="@dimen/space_4"
                 android:textColor="@color/text_secondary"
-                android:textSize="13sp"
+                android:textAppearance="@style/TextAppearance.TM.BodyMedium"
                 android:maxLines="2"
                 android:ellipsize="end"
-                tools:text="Milk, eggs, bread and butter"
-                xmlns:tools="http://schemas.android.com/tools" />
+                tools:text="Milk, eggs, bread and butter" />
+
+            <!-- Sub-tags Layout (Priority, Category, Due date) -->
+            <LinearLayout
+                android:id="@+id/layoutTags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_10"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <!-- Priority Badge -->
+                <TextView
+                    android:id="@+id/tvPriorityBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:text="HIGH"
+                    android:textColor="@color/error"
+                    android:background="@drawable/bg_glass_panel"
+                    android:backgroundTint="@color/error_container"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="@dimen/space_8"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <!-- Category Badge -->
+                <TextView
+                    android:id="@+id/tvCategoryBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:text="Work"
+                    android:textColor="@color/primary"
+                    android:background="@drawable/bg_glass_panel"
+                    android:backgroundTint="@color/primary_light"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="@dimen/space_8"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <!-- Due Date Badge -->
+                <TextView
+                    android:id="@+id/tvDueDateBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:text="Tomorrow"
+                    android:textColor="@color/warning"
+                    android:background="@drawable/bg_glass_panel"
+                    android:backgroundTint="@color/warning_container"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Arrow hint -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="›"
-            android:textColor="@color/text_secondary"
-            android:textSize="22sp" />
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="@dimen/space_8"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/text_disabled"
+            android:contentDescription="@null" />
 
     </LinearLayout>
 

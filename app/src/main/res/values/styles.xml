@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ================================================= -->
+    <!-- BUTTON STYLES (Material 3)                      -->
+    <!-- ================================================= -->
+
+    <style name="Widget.App.Button" parent="Widget.Material3.Button">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Button</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Label</item>
+        <item name="android:stateListAnimator">@animator/button_click_animator</item>
+    </style>
+
+    <style name="Widget.App.Button.Primary" parent="Widget.App.Button">
+    </style>
+
+    <style name="Widget.App.Button.Secondary" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Button</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Label</item>
+        <item name="android:stateListAnimator">@animator/button_click_animator</item>
+    </style>
+
+    <style name="Widget.App.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Button</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Label</item>
+        <item name="android:stateListAnimator">@animator/button_click_animator</item>
+    </style>
+
+    <style name="Widget.App.Button.Gradient" parent="Widget.App.Button.Primary">
+        <item name="android:background">@drawable/btn_gradient_selector</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:textColor">@color/btn_gradient_text_selector</item>
+    </style>
+
+    <style name="Widget.App.Button.Danger" parent="Widget.App.Button.Primary">
+        <item name="backgroundTint">?attr/colorError</item>
+        <item name="android:textColor">?attr/colorOnError</item>
+    </style>
+
+    <style name="Widget.App.Button.Success" parent="Widget.App.Button.Primary">
+        <item name="backgroundTint">@color/color_success</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="Widget.App.FAB" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+        <item name="android:stateListAnimator">@animator/fab_animator</item>
+    </style>
+
+    <style name="Widget.App.ExtendedFAB" parent="Widget.Material3.ExtendedFloatingActionButton.Primary">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Label</item>
+        <item name="iconTint">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:stateListAnimator">@animator/fab_animator</item>
+    </style>
+
+    <!-- ================================================= -->
+    <!-- CARD STYLES                                     -->
+    <!-- ================================================= -->
+
+    <style name="Widget.App.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardElevation">0dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+        <item name="cardBackgroundColor">?attr/colorSurface</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
+        <item name="android:stateListAnimator">@animator/card_elevation_animator</item>
+    </style>
+
+    <style name="Widget.App.Card.Task" parent="Widget.App.Card">
+    </style>
+
+    <style name="Widget.App.Card.AI" parent="Widget.App.Card">
+        <item name="cardBackgroundColor">@color/primary_light</item>
+        <item name="strokeColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Widget.App.Card.Statistics" parent="Widget.App.Card">
+    </style>
+
+    <style name="Widget.App.Card.Premium" parent="Widget.App.Card">
+        <item name="strokeColor">@color/premium_gold</item>
+    </style>
+
+    <!-- ================================================= -->
+    <!-- CHIP STYLES                                     -->
+    <!-- ================================================= -->
+
+    <style name="Widget.App.Chip" parent="Widget.Material3.Chip.Assist">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.SmallComponent</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Caption</item>
+    </style>
+
+    <style name="Widget.App.Chip.Category" parent="Widget.App.Chip">
+        <item name="chipStrokeColor">?attr/colorPrimary</item>
+        <item name="chipStrokeWidth">1dp</item>
+    </style>
+
+    <!-- ================================================= -->
+    <!-- INPUT STYLES                                     -->
+    <!-- ================================================= -->
+
+    <style name="Widget.App.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/radius_medium</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_medium</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_medium</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_medium</item>
+        <item name="android:layout_marginBottom">@dimen/spacing_16</item>
+    </style>
+
+    <style name="Widget.App.SearchBar" parent="Widget.App.Card">
+        <item name="cardElevation">0dp</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.MediumComponent</item>
+    </style>
+
+    <!-- ================================================= -->
+    <!-- MISC STYLES                                     -->
+    <!-- ================================================= -->
+
+    <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="titleTextAppearance">@style/TextAppearance.App.Title</item>
+        <item name="background">?attr/colorPrimary</item>
+        <item name="titleTextColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="SearchTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:editTextColor">?attr/colorOnSurface</item>
+        <item name="android:textColorHint">?attr/colorOnSurfaceVariant</item>
+        <item name="colorControlNormal">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="Widget.App.BottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+        <item name="backgroundTint">?attr/colorSurface</item>
+    </style>
+
+    <style name="Widget.App.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+    </style>
+
+</resources>

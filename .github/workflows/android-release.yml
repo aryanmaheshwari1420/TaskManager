@@ -1,0 +1,135 @@
+name: Android Release CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      upload_to_play_store:
+        description: 'Upload release bundle to Google Play Internal Testing'
+        required: true
+        type: boolean
+        default: true
+      version_code:
+        description: 'Custom versionCode override (leave empty for automated calculation)'
+        required: false
+        type: string
+        default: ''
+      version_name:
+        description: 'Custom versionName override (leave empty to use default in build.gradle.kts)'
+        required: false
+        type: string
+        default: ''
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build, Sign & Deploy Release AAB
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Inject Gemini API Key into local.properties
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          echo "[CI] Injecting Gemini API key into local.properties..."
+          # Write secret securely without echoing the value
+          printf "gemini.api.key=%s\n" "$GEMINI_API_KEY" > local.properties
+          echo "[CI] local.properties successfully configured."
+
+      - name: Decode Release Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          echo "[CI] Decoding release keystore..."
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::GitHub secret 'KEYSTORE_BASE64' is missing! Please configure it in repository settings."
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 --decode > keystore.jks
+          if [ ! -s keystore.jks ]; then
+            echo "::error::Decoded keystore.jks is empty or corrupted. Verify KEYSTORE_BASE64 format."
+            exit 1
+          fi
+          echo "[CI] Keystore reconstructed successfully ($(wc -c < keystore.jks) bytes)."
+
+      - name: Run Unit Tests
+        run: |
+          echo "[CI] Running unit tests..."
+          ./gradlew test --stacktrace
+
+      - name: Build Signed Release Bundle (.aab)
+        env:
+          KEYSTORE_FILE: keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          VERSION_CODE: ${{ inputs.version_code || '' }}
+          VERSION_NAME: ${{ inputs.version_name || '' }}
+        run: |
+          echo "[CI] Starting release bundle generation..."
+          ./gradlew bundleRelease --stacktrace
+
+      - name: Verify Release Bundle Output
+        id: verify-aab
+        run: |
+          AAB_PATH=$(find app/build/outputs/bundle/release -name "*.aab" | head -n 1)
+          if [ -z "$AAB_PATH" ] || [ ! -f "$AAB_PATH" ]; then
+            echo "::error::Release bundle (.aab) not found in app/build/outputs/bundle/release/!"
+            exit 1
+          fi
+          AAB_SIZE=$(wc -c < "$AAB_PATH")
+          AAB_SHA256=$(sha256sum "$AAB_PATH" | awk '{print $1}')
+          echo "[CI] Release bundle located at: $AAB_PATH"
+          echo "[CI] Size: $AAB_SIZE bytes"
+          echo "[CI] SHA-256 Checksum: $AAB_SHA256"
+          echo "aab_path=$AAB_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Upload AAB Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: taskmanager-release-${{ github.run_number }}
+          path: ${{ steps.verify-aab.outputs.aab_path }}
+          retention-days: 30
+
+      - name: Check Google Play Service Account Configuration
+        id: check-play-creds
+        env:
+          PLAY_CREDS: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          if [ -z "$PLAY_CREDS" ]; then
+            echo "has_play_creds=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::GOOGLE_PLAY_SERVICE_ACCOUNT_JSON secret is not configured in GitHub Secrets. Skipping Play Store upload."
+          else
+            echo "has_play_creds=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish to Google Play Internal Testing
+        if: ${{ steps.check-play-creds.outputs.has_play_creds == 'true' && (github.event_name == 'push' || inputs.upload_to_play_store != false) }}
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.aryanmaheshwari.taskmanager
+          releaseFiles: ${{ steps.verify-aab.outputs.aab_path }}
+          track: internal
+          status: completed
+          changesNotSentForReview: false

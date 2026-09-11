@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/space_32">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Drag handle -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/space_12"
+            android:layout_marginBottom="@dimen/space_4"
+            android:background="@color/divider"
+            android:importantForAccessibility="no" />
+
+        <!-- Sheet title with AI Gradient Badge -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/space_20"
+            android:paddingEnd="@dimen/space_20"
+            android:paddingTop="@dimen/space_8"
+            android:paddingBottom="@dimen/space_16">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="✦"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:gravity="center"
+                android:background="@drawable/gradient_primary" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/space_12">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AI Task Architect"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.TM.TitleLarge" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Powered by Google Gemini Flash"
+                    android:textColor="@color/text_secondary"
+                    android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Connection Banner Status -->
+        <TextView
+            android:id="@+id/tvConnectivityBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/surface_variant"
+            android:gravity="center"
+            android:paddingVertical="8dp"
+            android:text="Offline • AI plans saved locally"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
+
+        <!-- PANEL 1 — INPUT -->
+        <LinearLayout
+            android:id="@+id/panelInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/space_20"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Describe your goal"
+                android:textColor="@color/text_primary"
+                android:textAppearance="@style/TextAppearance.TM.TitleMedium" />
+
+            <EditText
+                android:id="@+id/etPrompt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_12"
+                android:background="@drawable/bg_input"
+                android:hint="e.g., Plan my workout schedule, design study guide…"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_secondary"
+                android:textAppearance="@style/TextAppearance.TM.BodyLarge"
+                android:padding="@dimen/space_16"
+                android:gravity="top|start"
+                android:minHeight="90dp"
+                android:maxLines="4"
+                android:inputType="textMultiLine|textCapSentences"
+                android:imeOptions="actionDone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_20"
+                android:text="Quick templates"
+                android:textColor="@color/text_secondary"
+                android:textAppearance="@style/TextAppearance.TM.TitleSmall" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupSuggestions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_8"
+                app:singleLine="false">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFlutter"
+                    style="@style/Widget.Material3.Chip.Suggestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Prepare Flutter interview"
+                    app:chipBackgroundColor="@color/primary_light"
+                    app:chipStrokeWidth="0dp"
+                    android:textColor="@color/primary"
+                    android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipGoa"
+                    style="@style/Widget.Material3.Chip.Suggestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Plan Goa trip"
+                    app:chipBackgroundColor="@color/primary_light"
+                    app:chipStrokeWidth="0dp"
+                    android:textColor="@color/primary"
+                    android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipRoom"
+                    style="@style/Widget.Material3.Chip.Suggestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Organize my room"
+                    app:chipBackgroundColor="@color/primary_light"
+                    app:chipStrokeWidth="0dp"
+                    android:textColor="@color/primary"
+                    android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAndroid"
+                    style="@style/Widget.Material3.Chip.Suggestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Learn Android"
+                    app:chipBackgroundColor="@color/primary_light"
+                    app:chipStrokeWidth="0dp"
+                    android:textColor="@color/primary"
+                    android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipWedding"
+                    style="@style/Widget.Material3.Chip.Suggestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wedding planning"
+                    app:chipBackgroundColor="@color/primary_light"
+                    app:chipStrokeWidth="0dp"
+                    android:textColor="@color/primary"
+                    android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/space_20"
+                android:gravity="end">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnInputCancel"
+                    style="@style/Widget.App.Button.Secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="@dimen/space_12"
+                    android:text="Cancel"
+                    android:textAllCaps="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnGenerate"
+                    style="@style/Widget.App.Button.Gradient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="Generate"
+                    android:textAllCaps="false" />
+
+            </LinearLayout>
+
+            <!-- Divider for voice section -->
+            <View
+                android:id="@+id/voiceDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/space_20"
+                android:layout_marginBottom="@dimen/space_12"
+                android:background="@color/divider" />
+
+            <!-- Voice input section -->
+            <TextView
+                android:id="@+id/tvVoiceLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Or extract task using voice (Hindi/English)"
+                android:textColor="@color/text_secondary"
+                android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
+
+            <LinearLayout
+                android:id="@+id/layoutVoiceControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/space_12">
+
+                <!-- Microphone button (glowing outer card) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMicrophone"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:iconGravity="textStart"
+                    app:icon="@android:drawable/ic_btn_speak_now"
+                    app:iconTint="@color/white"
+                    android:contentDescription="Record voice input"
+                    app:backgroundTint="@color/primary"
+                    app:cornerRadius="28dp" />
+
+                <!-- Recording indicator -->
+                <LinearLayout
+                    android:id="@+id/layoutRecordingIndicator"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:background="@drawable/bg_glass_panel"
+                    android:backgroundTint="@color/error_container"
+                    android:visibility="gone"
+                    android:layout_marginStart="@dimen/space_12">
+
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:background="@color/error"
+                        android:layout_marginEnd="@dimen/space_12"
+                        android:alpha="0.8" />
+
+                    <TextView
+                        android:id="@+id/tvRecordingStatus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Speak now..."
+                        android:textAppearance="@style/TextAppearance.TM.BodyLarge"
+                        android:textColor="@color/error" />
+
+                </LinearLayout>
+
+                <!-- Stop recording button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnStopRecording"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="✓"
+                    android:textSize="24sp"
+                    android:textColor="@color/white"
+                    android:visibility="gone"
+                    android:layout_marginStart="@dimen/space_8"
+                    app:backgroundTint="@color/success"
+                    app:cornerRadius="28dp" />
+
+                <!-- Cancel recording button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCancelRecording"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="✕"
+                    android:textSize="24sp"
+                    android:textColor="@color/error"
+                    android:visibility="gone"
+                    android:layout_marginStart="@dimen/space_4" />
+
+            </LinearLayout>
+
+            <!-- Offline/Cached Plans List -->
+            <TextView
+                android:id="@+id/tvSavedPlansHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="SAVED PLANS &amp; DRAFTS"
+                android:textColor="@color/text_secondary"
+                android:textAppearance="@style/TextAppearance.TM.TitleSmall"
+                android:letterSpacing="0.05"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSavedPlans"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <!-- PANEL 2 — LOADING (Cosmic Center Glow) -->
+        <LinearLayout
+            android:id="@+id/panelLoading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingHorizontal="32dp"
+            android:paddingVertical="40dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <!-- Dynamic Prompt Heading (Editorial Script Style) -->
+            <TextView
+                android:id="@+id/tvLoadingPrompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Planning your task flow..."
+                android:textStyle="italic"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:textColor="@color/text_primary"
+                android:textAppearance="@style/TextAppearance.TM.TitleLarge" />
+
+            <!-- Circular center glow ring progress -->
+            <FrameLayout
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/bg_glass_panel"
+                android:backgroundTint="@color/primary_light"
+                android:padding="24dp">
+
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:indeterminateTint="@color/primary" />
+            </FrameLayout>
+
+            <!-- Bottom status info -->
+            <TextView
+                android:id="@+id/tvLoadingStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Extracting task parameters..."
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:letterSpacing="0.05"
+                android:textAppearance="@style/TextAppearance.TM.LabelMedium" />
+
+        </LinearLayout>
+
+        <!-- PANEL 3 — PREVIEW -->
+        <LinearLayout
+            android:id="@+id/panelPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="gone">
+
+            <!-- USER INPUT / WHAT YOU SAID -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardUserSpeech"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/space_20"
+                android:layout_marginTop="@dimen/space_16"
+                app:cardCornerRadius="@dimen/radius_lg"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/transparent"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_glass_panel"
+                    android:backgroundTint="@color/surface_variant"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_16">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="YOU SAID"
+                            android:textColor="@color/text_secondary"
+                            android:textAppearance="@style/TextAppearance.TM.TitleSmall"
+                            android:textSize="10sp"
+                            android:letterSpacing="0.1" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnEditSpeech"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:text="Edit"
+                            android:textAllCaps="false"
+                            android:textSize="11sp"
+                            android:textColor="@color/primary"
+                            android:padding="0dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:insetLeft="0dp"
+                            android:insetRight="0dp" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/tvUserSpeechText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/text_primary"
+                        android:textAppearance="@style/TextAppearance.TM.BodyMedium"
+                        tools:text="Plan my workout schedule for the week..." />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_20"
+                android:layout_marginEnd="@dimen/space_20"
+                android:layout_marginTop="@dimen/space_16"
+                app:cardCornerRadius="@dimen/radius_lg"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/transparent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_glass_panel"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_16">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="✦ AI TASK ARCHITECT"
+                        android:textColor="@color/primary"
+                        android:textAppearance="@style/TextAppearance.TM.TitleSmall"
+                        android:textSize="10sp"
+                        android:letterSpacing="0.1"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvPreviewTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textAppearance="@style/TextAppearance.TM.TitleLarge"
+                        tools:text="Prepare Flutter interview" />
+
+                    <TextView
+                        android:id="@+id/tvPreviewDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:textColor="@color/text_secondary"
+                        android:textAppearance="@style/TextAppearance.TM.BodyMedium"
+                        tools:text="Go through Flutter fundamentals and prepare answers for common interview questions." />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_12"
+                        app:singleLine="true">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipPriority"
+                            style="@style/Widget.Material3.Chip.Assist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:chipStrokeWidth="0dp"
+                            android:textColor="@color/error"
+                            app:chipBackgroundColor="@color/error_container"
+                            android:textStyle="bold"
+                            tools:text="HIGH" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCategory"
+                            style="@style/Widget.Material3.Chip.Assist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:chipStrokeWidth="0dp"
+                            android:textColor="@color/primary"
+                            app:chipBackgroundColor="@color/primary_light"
+                            android:textStyle="bold"
+                            tools:text="Learning" />
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="@dimen/space_12">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🗓"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvDueDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_8"
+                            android:textColor="@color/text_secondary"
+                            android:textAppearance="@style/TextAppearance.TM.BodyMedium"
+                            tools:text="Due in 3 days" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/space_16"
+                        android:layout_marginBottom="@dimen/space_12"
+                        android:background="@color/divider" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Actionable Steps"
+                        android:textColor="@color/text_primary"
+                        android:textAppearance="@style/TextAppearance.TM.TitleSmall" />
+
+                    <LinearLayout
+                        android:id="@+id/layoutChecklist"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="@dimen/space_8" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="@dimen/space_20"
+                android:layout_marginEnd="@dimen/space_20"
+                android:layout_marginTop="@dimen/space_16"
+                android:layout_marginBottom="@dimen/space_8">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPreviewCancel"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="Cancel"
+                    android:textColor="@color/text_secondary"
+                    android:textAppearance="@style/TextAppearance.App.Label" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEdit"
+                    style="@style/Widget.App.Button.Outlined"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/space_8"
+                    android:text="Refine"
+                    app:strokeColor="@color/primary"
+                    android:textColor="@color/primary" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSave"
+                    style="@style/Widget.App.Button.Gradient"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/space_8"
+                    android:text="Save" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

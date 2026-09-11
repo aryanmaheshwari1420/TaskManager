@@ -2,24 +2,58 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="opacity_85_white">#D9FFFFFF</color>
 
-    <!-- Brand colors -->
-    <color name="primary">#6C63FF</color>
-    <color name="primary_dark">#4B44CC</color>
-    <color name="primary_light">#EEF0FF</color>
-    <color name="accent">#FF6584</color>
+    <!-- Warm Editorial Brand Palette (Reference Match) -->
+    <color name="primary">#14B8A6</color> <!-- Soft Teal -->
+    <color name="primary_dark">#0F766E</color>
+    <color name="primary_light">#E6F5F2</color> <!-- Soft Mint Tint -->
+    <color name="on_primary">#FFFFFF</color>
 
-    <!-- Backgrounds -->
-    <color name="bg_main">#F4F5FB</color>
+    <color name="secondary">#DD8E6C</color> <!-- Warm Bronze/Peach -->
+    <color name="secondary_light">#FDF4F0</color> <!-- Soft Peach Tint -->
+    <color name="on_secondary">#FFFFFF</color>
+
+    <color name="tertiary">#E27D60</color>
+    <color name="tertiary_light">#FDF3F1</color>
+    <color name="on_tertiary">#FFFFFF</color>
+
+    <!-- AI Colors -->
+    <color name="color_ai_primary">#14B8A6</color>
+    <color name="color_ai_surface">#E6F5F2</color>
+
+    <!-- Surfaces / Backgrounds (Warm Alabaster / Linen) -->
+    <color name="bg_main">#FBF9F4</color>
     <color name="bg_card">#FFFFFF</color>
-    <color name="bg_header">#6C63FF</color>
+    <color name="bg_header">#14B8A6</color>
+    <color name="surface_variant">#F5F3ED</color>
 
     <!-- Text -->
-    <color name="text_primary">#1A1A2E</color>
-    <color name="text_secondary">#6B7280</color>
+    <color name="text_primary">#2D2A26</color> <!-- Dark Warm Charcoal -->
+    <color name="text_secondary">#7A7570</color>
     <color name="text_on_primary">#FFFFFF</color>
+    <color name="text_disabled">#B8B2AC</color>
+
+    <!-- Status (Matching Priority Dot Specifications) -->
+    <color name="success">#10B981</color> <!-- Low -> Green -->
+    <color name="success_container">#E6FBF3</color>
+    <color name="warning">#F59E0B</color> <!-- Medium -> Orange/Amber -->
+    <color name="warning_container">#FEF8E6</color>
+    <color name="error">#EF4444</color> <!-- High -> Red -->
+    <color name="error_container">#FEEFEE</color>
+    <color name="info">#8B5CF6</color> <!-- Urgent -> Purple -->
+    <color name="info_container">#F5F3FF</color>
+
+    <!-- Aliases and Gradients -->
+    <color name="color_success">@color/success</color>
+    <color name="premium_gold">#DD8E6C</color>
+    <color name="gradient_start">#DC8560</color> <!-- Peach-Bronze -->
+    <color name="gradient_end">#14B8A6</color>   <!-- Soft Teal -->
 
     <!-- Misc -->
-    <color name="divider">#E5E7EB</color>
-    <color name="shadow">#1A000000</color>
+    <color name="divider">#EBE8E1</color>
+    <color name="shadow">#0A2D2A26</color>
+    <color name="scrim">#662D2A26</color>
+
+    <color name="accent">#14B8A6</color>
 </resources>

@@ -12,6 +12,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import android.widget.Toast
 
 /**
  * AdManager handles loading and showing of Interstitial and Rewarded Ads.
@@ -21,16 +22,19 @@ object AdManager {
     private const val TAG = "AdManager"
 
     // TEST IDs (Standard Google AdMob Test IDs)
+    private const val BANNER_TEST_ID = "ca-app-pub-3940256099942544/6300978111"
     private const val INTERSTITIAL_TEST_ID = "ca-app-pub-3940256099942544/1033173712"
     private const val REWARDED_TEST_ID = "ca-app-pub-3940256099942544/5224354917"
 
-    // PRODUCTION IDs (Placeholders - Replace with real IDs from AdMob Console)
+    // PRODUCTION IDs
+    private const val BANNER_PROD_ID = "ca-app-pub-7573894623963915/8806277771"
     private const val INTERSTITIAL_PROD_ID = "ca-app-pub-7573894623963915/8364993255"
     private const val REWARDED_PROD_ID = "ca-app-pub-7573894623963915/2530114589"
 
     private var mInterstitialAd: InterstitialAd? = null
     private var mRewardedAd: RewardedAd? = null
 
+    fun getBannerId(): String = if (BuildConfig.DEBUG) BANNER_TEST_ID else BANNER_PROD_ID
     private fun getInterstitialId(): String = if (BuildConfig.DEBUG) INTERSTITIAL_TEST_ID else INTERSTITIAL_PROD_ID
     private fun getRewardedId(): String = if (BuildConfig.DEBUG) REWARDED_TEST_ID else REWARDED_PROD_ID
 
@@ -109,8 +113,9 @@ object AdManager {
             }
         } else {
             Log.d(TAG, "Rewarded not ready")
+            Toast.makeText(activity, "Ad is not ready yet. Please try again in a few seconds.", Toast.LENGTH_SHORT).show()
             onAdDismissed()
-            loadRewardedAd(activity) // Ensure it loads for next time
+            loadRewardedAd(activity)
         }
     }
 }

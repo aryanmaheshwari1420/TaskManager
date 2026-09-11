@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp">
+
+    <FrameLayout
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/bg_glass_panel"
+        android:backgroundTint="@color/surface_variant"
+        android:padding="20dp"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/ivEmptyIllustration"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@android:drawable/ic_menu_search"
+            app:tint="@color/text_disabled"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvEmptyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="No matches found"
+        android:textColor="@color/text_primary"
+        android:textAppearance="@style/TextAppearance.TM.TitleMedium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvEmptySubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="Adjust your query parameters or reset search terms"
+        android:textAlignment="center"
+        android:textColor="@color/text_secondary"
+        android:textAppearance="@style/TextAppearance.TM.BodyMedium" />
+
+</LinearLayout>

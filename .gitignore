@@ -14,12 +14,19 @@
 .cxx
 local.properties
 
-# Keystore files
+# Keystore & Signing files
 *.jks
 *.keystore
+keystore.properties
+*.keystore.properties
 
 # Certificates
 *.pem
 
-# Optional (recommended)
+# Sensitive local config & credentials
 local.properties
+/local.properties
+*service*.json
+google-play-service-account*.json
+play-service-account.json
+

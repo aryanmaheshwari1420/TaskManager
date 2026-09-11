@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.App.Card.Task"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="2dp"
+    android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:checked="false"
+            app:buttonTint="?attr/colorPrimary" />
+
+        <TextView
+            android:id="@+id/tvChecklistItemText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:lineSpacingMultiplier="1.2"
+            android:textColor="@color/text_primary"
+            android:textAppearance="@style/TextAppearance.TM.BodyMedium"
+            tools:text="Book hotel in North Goa near Calangute beach" />
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:alpha="0.3"
+            android:contentDescription="@null"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            app:tint="@color/text_disabled" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
