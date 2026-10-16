@@ -9,6 +9,8 @@ import com.aryanmaheshwari.taskmanager.R
 import com.aryanmaheshwari.taskmanager.data.local.Task
 import com.aryanmaheshwari.taskmanager.databinding.ItemTaskBinding
 import com.aryanmaheshwari.taskmanager.utils.setCardFeedback
+import com.aryanmaheshwari.taskmanager.utils.TaskPriorityResolver
+import com.aryanmaheshwari.taskmanager.utils.TaskDescriptionResolver
 
 class TaskAdapter(
     private val onEdit: (Task) -> Unit,
@@ -40,6 +42,7 @@ class TaskAdapter(
         // Parse dynamic tags from description
         val parsedData = parseTaskDescription(task.description)
         holder.binding.tvDescription.text = parsedData.cleanDescription
+        holder.binding.tvDescription.visibility = if (parsedData.cleanDescription.isNotBlank()) View.VISIBLE else View.GONE
         
         var hasTags = false
         val context = holder.itemView.context
@@ -50,7 +53,7 @@ class TaskAdapter(
             
             // Set contextual colors based on priority value
             when (parsedData.priority.uppercase()) {
-                "HIGH" -> {
+                "URGENT", "HIGH" -> {
                     holder.binding.tvPriorityBadge.setTextColor(ContextCompat.getColor(context, R.color.error))
                     holder.binding.tvPriorityBadge.backgroundTintList = android.content.res.ColorStateList.valueOf(
                         ContextCompat.getColor(context, R.color.error_container)
@@ -121,16 +124,28 @@ class TaskAdapter(
             val trimmed = line.trim()
             when {
                 trimmed.startsWith("Priority:") -> {
-                    priority = trimmed.substringAfter("Priority:").trim()
+                    val rawP = trimmed.substringAfter("Priority:").trim()
+                    if (rawP.isNotBlank() && !rawP.equals("null", ignoreCase = true)) {
+                        priority = rawP.uppercase()
+                    }
                 }
                 trimmed.startsWith("Category:") -> {
-                    category = trimmed.substringAfter("Category:").trim()
+                    val rawC = trimmed.substringAfter("Category:").trim()
+                    if (rawC.isNotBlank() && !rawC.equals("null", ignoreCase = true)) {
+                        category = rawC
+                    }
                 }
                 trimmed.startsWith("Due:") -> {
-                    dueDate = trimmed.substringAfter("Due:").trim()
+                    val rawD = trimmed.substringAfter("Due:").trim()
+                    if (rawD.isNotBlank() && !rawD.equals("null", ignoreCase = true)) {
+                        dueDate = rawD
+                    }
                 }
                 trimmed.startsWith("Checklist:") || trimmed.startsWith("•") -> {
                     // Skip these lines in the clean description preview
+                }
+                trimmed.equals("null", ignoreCase = true) -> {
+                    // Skip legacy literal "null"
                 }
                 else -> {
                     cleanLines.add(line)
@@ -138,7 +153,8 @@ class TaskAdapter(
             }
         }
         
-        val cleanDesc = cleanLines.joinToString("\n").trim()
-        return ParsedTaskData(cleanDesc, priority, category, dueDate)
+        val cleanDesc = TaskDescriptionResolver.cleanText(cleanLines.joinToString("\n"))
+        val resolvedPriority = TaskPriorityResolver.resolvePriority(priority, null)
+        return ParsedTaskData(cleanDesc, resolvedPriority, category, dueDate)
     }
 }

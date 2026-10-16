@@ -378,8 +378,14 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
             binding.cardUserSpeech.visibility = View.GONE
         }
 
-        binding.tvPreviewTitle.text       = task.title
-        binding.tvPreviewDescription.text = task.description
+        binding.tvPreviewTitle.text = task.title
+        val cleanDesc = task.description.trim()
+        if (cleanDesc.isNotBlank() && !cleanDesc.equals("null", ignoreCase = true)) {
+            binding.tvPreviewDescription.text = cleanDesc
+            binding.tvPreviewDescription.visibility = View.VISIBLE
+        } else {
+            binding.tvPreviewDescription.visibility = View.GONE
+        }
 
         binding.chipPriority.apply {
             text = task.priority.replaceFirstChar { it.uppercase() }
@@ -457,7 +463,7 @@ class AiTaskGeneratorBottomSheet : BottomSheetDialogFragment() {
     private fun priorityColors(priority: String): Pair<Int, Int> {
         val ctx = requireContext()
         return when (priority.uppercase()) {
-            "HIGH"   -> ctx.getColor(R.color.error_container) to ctx.getColor(R.color.error)
+            "URGENT", "HIGH" -> ctx.getColor(R.color.error_container) to ctx.getColor(R.color.error)
             "MEDIUM" -> ctx.getColor(R.color.warning_container) to ctx.getColor(R.color.warning)
             else     -> ctx.getColor(R.color.info_container) to ctx.getColor(R.color.info)
         }

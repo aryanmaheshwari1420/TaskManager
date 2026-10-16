@@ -3,6 +3,8 @@ package com.aryanmaheshwari.taskmanager.data.local
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
+import com.aryanmaheshwari.taskmanager.utils.TaskPriorityResolver
+import com.aryanmaheshwari.taskmanager.utils.TaskDescriptionResolver
 
 @Entity(tableName = "ai_snapshot_table")
 data class AiSnapshot(
@@ -26,10 +28,10 @@ fun GeneratedTask.toAiSnapshot(prompt: String, isVoice: Boolean, audioFilePath: 
     return AiSnapshot(
         prompt = prompt,
         title = title,
-        description = description,
-        priority = priority,
-        categoryName = category?.name,
-        dueDate = dueDate,
+        description = TaskDescriptionResolver.cleanText(description),
+        priority = TaskPriorityResolver.resolvePriority(priority, transcript ?: prompt),
+        categoryName = category?.name?.takeIf { !it.equals("null", ignoreCase = true) },
+        dueDate = TaskDescriptionResolver.cleanText(dueDate),
         checklistJson = checklistJson,
         isVoice = isVoice,
         audioFilePath = audioFilePath,
@@ -45,10 +47,10 @@ fun AiSnapshot.toGeneratedTask(): GeneratedTask {
     }
     return GeneratedTask(
         title = title,
-        description = description,
-        priority = priority,
-        category = categoryName?.let { CategoryEntity(it) },
-        dueDate = dueDate,
+        description = TaskDescriptionResolver.cleanText(description),
+        priority = TaskPriorityResolver.resolvePriority(priority, prompt),
+        category = categoryName?.takeIf { it.isNotBlank() && !it.equals("null", ignoreCase = true) }?.let { CategoryEntity(it) },
+        dueDate = TaskDescriptionResolver.cleanText(dueDate),
         checklist = items,
         transcript = if (isVoice) prompt else null
     )

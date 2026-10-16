@@ -16,6 +16,8 @@ import com.aryanmaheshwari.taskmanager.ui.viewmodel.TaskViewModel
 import com.aryanmaheshwari.taskmanager.utils.setClickFeedback
 import com.aryanmaheshwari.taskmanager.utils.setCardFeedback
 import com.aryanmaheshwari.taskmanager.utils.setIconButtonFeedback
+import com.aryanmaheshwari.taskmanager.utils.TaskPriorityResolver
+import com.aryanmaheshwari.taskmanager.utils.TaskDescriptionResolver
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -27,7 +29,7 @@ class AddEditTaskActivity : AppCompatActivity() {
     private var taskId = 0
 
     // Selected metadata states
-    private var selectedPriority: String? = null
+    private var selectedPriority: String? = TaskPriorityResolver.DEFAULT_PRIORITY
     private var selectedCategory: String? = null
     private var selectedDueDate: String? = null
 
@@ -101,6 +103,9 @@ class AddEditTaskActivity : AppCompatActivity() {
                     binding.tvSelectedDueDate.text = selectedDueDate
                     binding.tvSelectedDueDate.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
                 }
+                selectPriority(selectedPriority)
+            } else {
+                selectedPriority = TaskPriorityResolver.DEFAULT_PRIORITY
                 selectPriority(selectedPriority)
             }
         }
@@ -265,21 +270,34 @@ class AddEditTaskActivity : AppCompatActivity() {
             val trimmed = line.trim()
             when {
                 trimmed.startsWith("Priority:") -> {
-                    priority = trimmed.substringAfter("Priority:").trim()
+                    val rawP = trimmed.substringAfter("Priority:").trim()
+                    if (rawP.isNotBlank() && !rawP.equals("null", ignoreCase = true)) {
+                        priority = rawP.uppercase()
+                    }
                 }
                 trimmed.startsWith("Category:") -> {
-                    category = trimmed.substringAfter("Category:").trim()
+                    val rawC = trimmed.substringAfter("Category:").trim()
+                    if (rawC.isNotBlank() && !rawC.equals("null", ignoreCase = true)) {
+                        category = rawC
+                    }
                 }
                 trimmed.startsWith("Due:") -> {
-                    dueDate = trimmed.substringAfter("Due:").trim()
+                    val rawD = trimmed.substringAfter("Due:").trim()
+                    if (rawD.isNotBlank() && !rawD.equals("null", ignoreCase = true)) {
+                        dueDate = rawD
+                    }
+                }
+                trimmed.equals("null", ignoreCase = true) -> {
+                    // Ignore legacy literal "null" line
                 }
                 else -> {
                     cleanLines.add(line)
                 }
             }
         }
-        val cleanDesc = cleanLines.joinToString("\n").trim()
-        return ParsedFields(cleanDesc, priority, category, dueDate)
+        val cleanDesc = TaskDescriptionResolver.cleanText(cleanLines.joinToString("\n"))
+        val resolvedPriority = TaskPriorityResolver.resolvePriority(priority, null)
+        return ParsedFields(cleanDesc, resolvedPriority, category, dueDate)
     }
 
     private fun buildTaskDescription(
@@ -288,22 +306,22 @@ class AddEditTaskActivity : AppCompatActivity() {
         category: String?,
         dueDate: String?
     ): String {
-        val builder = java.lang.StringBuilder()
-        builder.append(userDescription.trim())
+        val cleanDesc = TaskDescriptionResolver.cleanText(userDescription)
+        val resolvedPriority = TaskPriorityResolver.resolvePriority(priority, null)
+        val cleanCat = TaskDescriptionResolver.cleanText(category)
+        val cleanDue = TaskDescriptionResolver.cleanText(dueDate)
 
-        if (priority != null || category != null || dueDate != null) {
-            if (userDescription.isNotBlank()) {
-                builder.append("\n\n")
-            }
-            if (priority != null) {
-                builder.append("Priority: $priority\n")
-            }
-            if (category != null) {
-                builder.append("Category: $category\n")
-            }
-            if (dueDate != null) {
-                builder.append("Due: $dueDate\n")
-            }
+        val builder = java.lang.StringBuilder()
+        if (cleanDesc.isNotBlank()) {
+            builder.append(cleanDesc)
+            builder.append("\n\n")
+        }
+        builder.append("Priority: $resolvedPriority\n")
+        if (cleanCat.isNotBlank()) {
+            builder.append("Category: $cleanCat\n")
+        }
+        if (cleanDue.isNotBlank()) {
+            builder.append("Due: $cleanDue\n")
         }
         return builder.toString().trim()
     }

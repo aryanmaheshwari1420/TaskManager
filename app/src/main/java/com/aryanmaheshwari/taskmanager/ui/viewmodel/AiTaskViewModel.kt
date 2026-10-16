@@ -20,6 +20,8 @@ import com.aryanmaheshwari.taskmanager.data.repository.AiTaskRepository
 import com.aryanmaheshwari.taskmanager.data.repository.TaskRepository
 import com.aryanmaheshwari.taskmanager.utils.AudioRecorder
 import com.aryanmaheshwari.taskmanager.utils.NetworkMonitor
+import com.aryanmaheshwari.taskmanager.utils.TaskPriorityResolver
+import com.aryanmaheshwari.taskmanager.utils.TaskDescriptionResolver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -160,7 +162,7 @@ class AiTaskViewModel(application: Application) : AndroidViewModel(application) 
             val placeholderTask = GeneratedTask(
                 title = if (isVoice) "Voice AI Request" else prompt.take(30).trim() + "...",
                 description = "Offline draft saved. Tap below to generate when back online.",
-                priority = "MEDIUM",
+                priority = TaskPriorityResolver.DEFAULT_PRIORITY,
                 category = null,
                 dueDate = "",
                 checklist = emptyList(),
@@ -288,12 +290,24 @@ class AiTaskViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun buildFormattedDescription(generated: GeneratedTask): String {
+        val cleanDesc = TaskDescriptionResolver.cleanText(generated.description)
+        val priority = TaskPriorityResolver.resolvePriority(generated.priority, generated.transcript)
         return buildString {
-            append(generated.description)
-            if (generated.description.isNotBlank()) append("\n\n")
-            if (generated.priority.isNotBlank()) append("Priority: ${generated.priority}\n")
-            generated.category?.let { append("Category: ${it.name}\n") }
-            if (generated.dueDate.isNotBlank())   append("Due: ${generated.dueDate}\n")
+            if (cleanDesc.isNotBlank()) {
+                append(cleanDesc)
+                append("\n\n")
+            }
+            append("Priority: $priority\n")
+            generated.category?.let {
+                val catName = TaskDescriptionResolver.cleanText(it.name)
+                if (catName.isNotBlank()) {
+                    append("Category: $catName\n")
+                }
+            }
+            val dueDate = TaskDescriptionResolver.cleanText(generated.dueDate)
+            if (dueDate.isNotBlank()) {
+                append("Due: $dueDate\n")
+            }
             if (generated.checklist.isNotEmpty()) {
                 append("\nChecklist:\n")
                 generated.checklist.forEach { append("• ${it.text}\n") }

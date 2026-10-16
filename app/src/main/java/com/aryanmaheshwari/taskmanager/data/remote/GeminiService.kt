@@ -16,6 +16,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.getValue
+import com.aryanmaheshwari.taskmanager.utils.TaskPriorityResolver
+import com.aryanmaheshwari.taskmanager.utils.TaskDescriptionResolver
 
 /**
  * Service layer that communicates with Google's Gemini REST API via Retrofit + OkHttp.
@@ -49,14 +51,16 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
 
         Rules:
         - Generate a meaningful title.
+        - Generate a concise description if context/details exist, or empty string "" if none. Never return null or "null".
         - Generate 5-10 actionable checklist items.
-        - Infer category.
-        - Infer priority.
-        - Infer due date if user mentions time.
+        - Infer category or empty string "".
+        - Priority must default to "LOW" unless explicitly stated as HIGH/URGENT/MEDIUM.
+        - Infer due date if user mentions time, or empty string "".
         - Never return markdown.
         - Never explain.
         - Never wrap JSON inside code blocks.
         - Never return extra text.
+        - Never return null for string fields; use empty string "".
         - If information is missing, make intelligent assumptions.
         - Optimize prompt for consistent JSON generation.
         
@@ -86,10 +90,10 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
         {
           "transcript": "Exact transcription of what the user said in Hindi/English mixed speech (as spoken)",
           "title": "Task title (required)",
-          "description": "Optional description",
-          "priority": "HIGH/MEDIUM/LOW or null",
-          "category": "Inferred category or null",
-          "dueDate": "Relative or absolute date or null",
+          "description": "Task description summarizing details/context, or empty string \"\" (never null or \"null\")",
+          "priority": "LOW, MEDIUM, HIGH, or URGENT (Default to LOW if not explicitly mentioned)",
+          "category": "Inferred category or empty string \"\"",
+          "dueDate": "Relative or absolute date or empty string \"\"",
           "checklist": ["Item 1", "Item 2", ...] or []
         }
         
@@ -97,11 +101,13 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
         1. Understand Hindi/English mixed speech.
         2. Understand relative dates: "kal" (tomorrow), "aaj" (today), "next Monday".
         3. Understand relative times: "shaam" (evening), "subah" (morning).
-        4. If user mentions multiple items, add them as checklist items.
-        5. Return ONLY valid JSON.
-        6. Never return markdown or code blocks.
-        7. Never explain.
-        8. Transcribe the raw speech as accurately as possible and write it in the "transcript" field.
+        4. Priority rule: Always default to "LOW" unless the user explicitly indicates priority (e.g. "high priority", "urgent", "important", "bahut zaroori" -> HIGH/URGENT; "medium priority" -> MEDIUM; "low priority", "kam priority" -> LOW).
+        5. Description rule: Provide useful details in description if mentioned. If no extra details exist, use empty string "". Never use the word "null" or null value.
+        6. If user mentions multiple items, add them as checklist items.
+        7. Return ONLY valid JSON.
+        8. Never return markdown or code blocks.
+        9. Never explain.
+        10. Transcribe the raw speech as accurately as possible and write it in the "transcript" field.
         
         CRITICAL: Respond ONLY with the raw JSON object.
     """.trimIndent()
@@ -184,6 +190,7 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
         val mimeType = when (audioFile.extension.lowercase()) {
             "mp3" -> "audio/mp3"
             "wav" -> "audio/wav"
+            "m4a" -> "audio/mp4"
             "aac" -> "audio/aac"
             "flac" -> "audio/flac"
             "ogg" -> "audio/ogg"
@@ -223,9 +230,8 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
         return parseGeneratedTask(rawText)
     }
 
-    // ---------- Private helpers ----------------------------------------------
-
-    private fun parseGeneratedTask(jsonText: String): GeneratedTask {
+    // ---------- Private / Internal helpers -----------------------------------
+    internal fun parseGeneratedTask(jsonText: String): GeneratedTask {
         try {
             val clean = stripMarkdownFences(jsonText)
             val obj = JSONObject(clean)
@@ -234,26 +240,46 @@ class GeminiService(private val apiKey: String = BuildConfig.GEMINI_API_KEY) {
             val checklist = buildList {
                 if (checklistArray != null) {
                     for (i in 0 until checklistArray.length()) {
-                        add(ChecklistItem(taskId = 0, text = checklistArray.getString(i)))
+                        val item = checklistArray.optString(i, "").trim()
+                        if (item.isNotBlank() && !item.equals("null", ignoreCase = true)) {
+                            add(ChecklistItem(taskId = 0, text = item))
+                        }
                     }
                 }
             }
 
-            val categoryName = obj.optString("category", "").trim()
+            val transcript = obj.optCleanString("transcript").takeIf { it.isNotBlank() }
+            val rawTitle = obj.optCleanString("title")
+            val title = if (rawTitle.isNotBlank()) rawTitle else "Generated Task"
+
+            val rawDesc = obj.optCleanString("description")
+            val description = TaskDescriptionResolver.resolveDescription(rawDesc, title, transcript)
+
+            val rawPriority = obj.optCleanString("priority")
+            val priority = TaskPriorityResolver.resolvePriority(rawPriority, transcript)
+
+            val categoryName = obj.optCleanString("category")
+            val rawDueDate = obj.optCleanString("dueDate")
 
             return GeneratedTask(
-                title       = obj.optString("title", "Generated Task").trim(),
-                description = obj.optString("description", "").trim(),
-                priority    = obj.optString("priority", "MEDIUM").uppercase().trim(),
+                title       = title,
+                description = description,
+                priority    = priority,
                 category    = if (categoryName.isNotBlank()) CategoryEntity(categoryName) else null,
-                dueDate     = obj.optString("dueDate", "").trim(),
+                dueDate     = rawDueDate,
                 checklist   = checklist,
-                transcript  = obj.optString("transcript", "").trim().takeIf { it.isNotBlank() }
+                transcript  = transcript
             )
         } catch (e: JSONException) {
             Log.e(TAG, "JSON parse failure: $jsonText", e)
             throw IllegalStateException("Could not understand the AI response. Please try again.")
         }
+    }
+
+    private fun JSONObject.optCleanString(key: String): String {
+        if (isNull(key)) return ""
+        val value = optString(key, "").trim()
+        return if (value.equals("null", ignoreCase = true)) "" else value
     }
 
     private fun stripMarkdownFences(text: String): String {
