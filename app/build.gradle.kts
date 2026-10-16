@@ -83,6 +83,10 @@ android {
         buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
     }
 
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+
     signingConfigs {
         create("release") {
             if (isSigningConfigured) {

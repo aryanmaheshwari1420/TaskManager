@@ -44,8 +44,11 @@ class AiTaskRepository(private val geminiService: GeminiService = GeminiService(
             } catch (e: IllegalArgumentException) {
                 // API key not configured
                 Result.failure(e)
+            } catch (e: IllegalStateException) {
+                // Domain exceptions (e.g. empty response, JSON parse failure)
+                Result.failure(e)
             } catch (e: Exception) {
-                Result.failure(Exception(e.message ?: "An unexpected error occurred. Please try again."))
+                Result.failure(Exception("Failed to generate task. Please try again.", e))
             }
         }
 
@@ -93,8 +96,11 @@ class AiTaskRepository(private val geminiService: GeminiService = GeminiService(
             } catch (e: IllegalArgumentException) {
                 // API key not configured or file not found
                 Result.failure(e)
+            } catch (e: IllegalStateException) {
+                // Domain exceptions (e.g. empty response, JSON parse failure)
+                Result.failure(e)
             } catch (e: Exception) {
-                Result.failure(Exception(e.message ?: "An unexpected error occurred. Please try again."))
+                Result.failure(Exception("Failed to process voice input. Please try again.", e))
             } finally {
                 // Clean up the audio file after processing
                 try {

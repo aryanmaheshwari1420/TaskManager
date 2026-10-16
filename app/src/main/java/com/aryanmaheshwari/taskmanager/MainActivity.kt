@@ -346,6 +346,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        networkMonitor.unregister()
+        if (::networkMonitor.isInitialized) {
+            networkMonitor.unregister()
+        }
     }
 }

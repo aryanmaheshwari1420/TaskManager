@@ -19,6 +19,9 @@
 -dontwarn org.conscrypt.**
 -keep class retrofit2.** { *; }
 -keep class okhttp3.** { *; }
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
 
 # Gson
 -keepattributes EnclosingMethod
